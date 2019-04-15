@@ -40,5 +40,6 @@ public class InfoConstant {
     public static final String INVALID_SIZE = "The size of coffee is invalid.";
     public static final String ORDER_INFORMATION = "name: {0}, size: {1}, number: {2}, price: {3}$";
     public static final String CREATE_COFFEE_FAILED = "Failed to create coffee, check csv.";
-
+    public static final String CREATE_TEA_FAILED = "Failed to create tea, check csv.";
+    public static final String CREATE_INGREDIENT_FAILED = "Failed to create tea, check csv.";
 }
