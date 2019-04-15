@@ -8,7 +8,7 @@ import fudan.se.lab4.util.FileUtil;
 
 import java.text.MessageFormat;
 
-public class ReaTeaRepositoryImpl implements RedTeaRepository {
+public class RedTeaRepositoryImpl implements RedTeaRepository {
     @Override
     public RedTea getRedTea(String name) {
         return stringArrayToObject(FileUtil.readByName(name, FileConstant.REDTEA_CSV));

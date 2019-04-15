@@ -4,16 +4,8 @@ import fudan.se.lab4.constant.InfoConstant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public abstract class Tea {
-    private String name;
-    private String description;
-    private double price;
-    private int size;
-    private static Logger logger = LoggerFactory.getLogger(Coffee.class);
-
-    public String getDescription() {
-        return description;
-    }
+public abstract class Tea extends Drinks {
+    private static Logger logger = LoggerFactory.getLogger(Tea.class);
 
     public void setDescription(String description) {
         if (!"".equals(description)) {
@@ -22,10 +14,6 @@ public abstract class Tea {
             failToCreate();
         }
 
-    }
-
-    public int getSize() {
-        return size;
     }
 
     public void setSize(int size) {
@@ -37,10 +25,6 @@ public abstract class Tea {
         }
     }
 
-    public String getName() {
-        return name;
-    }
-
     public void setName(String name) {
         if (!"".equals(name)) {
             this.name = name;
@@ -48,10 +32,6 @@ public abstract class Tea {
             failToCreate();
         }
 
-    }
-
-    public double getPrice() {
-        return price;
     }
 
     public void setPrice(double price) {
@@ -71,7 +51,6 @@ public abstract class Tea {
             }
         }
     }
-
 
     private void failToCreate() {
         logger.info(InfoConstant.CREATE_TEA_FAILED);

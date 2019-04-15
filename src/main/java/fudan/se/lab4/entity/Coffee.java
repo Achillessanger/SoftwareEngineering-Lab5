@@ -4,16 +4,9 @@ import fudan.se.lab4.constant.InfoConstant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public abstract class Coffee {
-    private String name;
-    private String description;
-    private double price;
-    private int size;
-    private static Logger logger = LoggerFactory.getLogger(Coffee.class);
+public abstract class Coffee extends Drinks {
 
-    public String getDescription() {
-        return description;
-    }
+    private static Logger logger = LoggerFactory.getLogger(Coffee.class);
 
     public void setDescription(String description) {
         if (!"".equals(description)) {
@@ -21,11 +14,6 @@ public abstract class Coffee {
         } else {
             failToCreate();
         }
-
-    }
-
-    public int getSize() {
-        return size;
     }
 
     public void setSize(int size) {
@@ -37,41 +25,28 @@ public abstract class Coffee {
         }
     }
 
-    public String getName() {
-        return name;
-    }
-
     public void setName(String name) {
         if (!"".equals(name)) {
             this.name = name;
         } else {
             failToCreate();
         }
-
-    }
-
-    public double getPrice() {
-        return price;
     }
 
     public void setPrice(double price) {
         this.price = price;
     }
 
-    public abstract double cost();
-
     double priceOfSize() {
         //big-size3-$6 middle-size2-$4 small-size1-$2
-        checkSize();
-        return getSize() * 2.0;
-    }
-
-    private void checkSize() {
         if (getSize() <= 0 || getSize() >= 4) {
             logger.info(InfoConstant.INVALID_SIZE);
             throw new RuntimeException(InfoConstant.INVALID_SIZE);
         }
+        return getSize() * 2.0;
     }
+
+    public abstract double cost();
 
     private void failToCreate() {
         logger.info(InfoConstant.CREATE_COFFEE_FAILED);
