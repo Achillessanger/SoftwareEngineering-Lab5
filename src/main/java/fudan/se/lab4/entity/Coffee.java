@@ -1,6 +1,6 @@
 package fudan.se.lab4.entity;
 
-import fudan.se.lab2.constant.InfoConstant;
+import fudan.se.lab4.constant.InfoConstant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

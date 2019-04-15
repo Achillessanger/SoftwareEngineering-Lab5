@@ -1,10 +1,10 @@
 package fudan.se.lab4.repository.impl;
 
-import fudan.se.lab2.constant.FileConstant;
-import fudan.se.lab2.constant.InfoConstant;
-import fudan.se.lab2.entity.Cappuccino;
-import fudan.se.lab2.repository.CappuccinoRepository;
-import fudan.se.lab2.util.FileUtil;
+import fudan.se.lab4.constant.FileConstant;
+import fudan.se.lab4.constant.InfoConstant;
+import fudan.se.lab4.entity.Cappuccino;
+import fudan.se.lab4.repository.CappuccinoRepository;
+import fudan.se.lab4.util.FileUtil;
 
 import java.text.MessageFormat;
 
