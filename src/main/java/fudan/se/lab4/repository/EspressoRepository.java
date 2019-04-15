@@ -1,6 +1,6 @@
 package fudan.se.lab4.repository;
 
-import fudan.se.lab2.entity.Espresso;
+import fudan.se.lab4.entity.Espresso;
 
 public interface EspressoRepository {
 
