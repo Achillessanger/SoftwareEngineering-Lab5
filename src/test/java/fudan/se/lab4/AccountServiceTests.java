@@ -1,9 +1,9 @@
 package fudan.se.lab4;
 
-import fudan.se.lab2.constant.InfoConstant;
-import fudan.se.lab2.entity.User;
-import fudan.se.lab2.repository.UserRepository;
-import fudan.se.lab2.service.impl.AccountServiceImpl;
+import fudan.se.lab4.constant.InfoConstant;
+import fudan.se.lab4.entity.User;
+import fudan.se.lab4.repository.UserRepository;
+import fudan.se.lab4.service.impl.AccountServiceImpl;
 import org.jmock.Expectations;
 import org.jmock.Mockery;
 import org.junit.After;
