@@ -51,4 +51,32 @@ public class PaymentInfo implements Serializable {
     public void setMsgs(List<String> msgs) {
         this.msgs = msgs;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (null == obj) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        PaymentInfo paymentInfo = (PaymentInfo) obj;
+        if (price != paymentInfo.getPrice()) {
+            return false;
+        }
+        if (discount != paymentInfo.getDiscount()) {
+            return false;
+        }
+        if (discountPrice != paymentInfo.getDiscountPrice()) {
+            return false;
+        }
+        if (!msgs.equals(paymentInfo.getMsgs())) {
+            return false;
+        }
+        return true;
+
+    }
 }
