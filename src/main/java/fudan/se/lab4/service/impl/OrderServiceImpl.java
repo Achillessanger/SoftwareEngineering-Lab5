@@ -41,7 +41,6 @@ public class OrderServiceImpl implements OrderService {
             double price = 0.0;
             Drinks drinks = getDrinks(orderItem.getName());
             drinks.setSize(orderItem.getSize());
-            //没有给我杯数默认一杯了
             price += drinks.cost();
             for (Ingredient ingredient : orderItem.getIngredients()){
                 price += new IngredientRepositoryImpl().getIngredient(ingredient.getName()).getPrice()*ingredient.getNumber();
