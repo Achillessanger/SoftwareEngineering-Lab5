@@ -49,7 +49,6 @@ public class OrderServiceImpl implements OrderService {
             totalPrice +=price;
         }
         return totalPrice;
-
     }
 
     private Drinks getDrinks(String name){
