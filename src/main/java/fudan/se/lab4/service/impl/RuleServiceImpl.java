@@ -101,7 +101,7 @@ public class RuleServiceImpl implements RuleService {
             for(Map.Entry<String,Integer> entry : sortList){
                 description += entry.getKey()+" ";
             }
-            description += "买"+rule.getCondition()+"送"+rule.getProfit();
+            description += ":买"+rule.getCondition()+"杯送"+(int)rule.getProfit()+"杯";
         }
         //TODO 之后可以拓展送的是别的饮料的情况
 
@@ -133,7 +133,7 @@ public class RuleServiceImpl implements RuleService {
                 }else {
                     discount += rule.getDiscountRange() * rule.getProfit() * drink.getPrice();
                 }
-                description += entry.getValue()+": "+"每"+rule.getCondition()+ "杯,"+rule.getDiscountRange()+"杯"+(rule.getProfit()*10)+"折; ";
+                description += entry.getKey()+": "+"每"+rule.getCondition()+ "杯,"+rule.getDiscountRange()+"杯"+(rule.getProfit()*10)+"折 ";
             }
         }
         return new RuleResult(rule,discount,description);

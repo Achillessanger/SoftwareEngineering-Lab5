@@ -171,6 +171,27 @@ public class OrderServiceTests {
     }
 
     @Test
+    public void tt(){
+        List<OrderItem> orderItems = new ArrayList<>();
+        List<Ingredient> ingredients = new ArrayList<>();
+        item = new OrderItem("espresso",ingredients,3);
+        orderItems.add(item);
+        item = new OrderItem("espresso",ingredients,3);
+        orderItems.add(item);
+        item = new OrderItem("espresso",ingredients,3);
+        orderItems.add(item);
+        item = new OrderItem("espresso",ingredients,3);
+        orderItems.add(item);
+        paymentInfo = orderService.pay(new Order("0", orderItems));
+        double a = paymentInfo.getDiscount();
+        double b = paymentInfo.getPrice();
+        double c = paymentInfo.getDiscountPrice();
+        int debug = 0;
+
+    }
+
+
+    @Test
     public void testIngredient() {
         List<OrderItem> orderItems = new ArrayList<>();
         List<Ingredient> ingredients = new ArrayList<>();
