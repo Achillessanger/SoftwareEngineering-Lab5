@@ -169,6 +169,7 @@ public class OrderServiceTests {
         paymentInfo = orderService.pay(new Order("3", orderItems));
         assertEquals(new PaymentInfo(70, 0, 70, new ArrayList<>()), paymentInfo);
     }
+
     
     @Test
     public void testIngredient() {

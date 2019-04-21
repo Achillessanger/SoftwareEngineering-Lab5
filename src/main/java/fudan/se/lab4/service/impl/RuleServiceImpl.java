@@ -76,7 +76,7 @@ public class RuleServiceImpl implements RuleService {
                 }
             });
             int sub = rule.getCondition() + (int)rule.getProfit();
-            if(num > rule.getCondition()){
+            if (num > rule.getCondition()){
                 if(rule.isCanAdd()){
                     for(Map.Entry<String,Integer> entry : sortList){
                         Drinks drink = drinkUtil.getDrinks(entry.getKey());
