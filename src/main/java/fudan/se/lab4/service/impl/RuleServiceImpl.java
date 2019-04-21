@@ -81,20 +81,20 @@ public class RuleServiceImpl implements RuleService {
                     return (int)drinkUtil.getDrinks(o2.getKey()).getPrice()*100 - (int)drinkUtil.getDrinks(o1.getKey()).getPrice()*100 ;
                 }
             });
-            int sub = rule.getCondition() + 1;
+            int sub = rule.getCondition() + (int)rule.getProfit();
             if(num > rule.getCondition()){
                 if(rule.isCanAdd()){
                     for(Map.Entry<String,Integer> entry : sortList){
                         Drinks drink = drinkUtil.getDrinks(entry.getKey());
                         if(num > 0 && (entry.getValue()*sub) >= num){
-                            discount += num/sub * drink.getPrice();
+                            discount += (num/sub) * drink.getPrice() * rule.getProfit();
                         }else if(num > 0){
-                            discount += entry.getValue() * drink.getPrice();
+                            discount += entry.getValue() * drink.getPrice() * rule.getProfit();
                             num -= entry.getValue() * sub;
                         }
                     }
                 }else {
-                    discount += drinkUtil.getDrinks(sortList.get(0).getKey()).getPrice();
+                    discount += drinkUtil.getDrinks(sortList.get(0).getKey()).getPrice() * rule.getProfit();
                 }
             }
 
