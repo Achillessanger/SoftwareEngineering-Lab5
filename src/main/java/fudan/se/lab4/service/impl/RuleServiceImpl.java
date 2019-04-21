@@ -1,43 +1,159 @@
 package fudan.se.lab4.service.impl;
 
+import com.sun.tools.corba.se.idl.constExpr.Or;
 import fudan.se.lab4.context.RuleContext;
+import fudan.se.lab4.dto.Order;
+import fudan.se.lab4.dto.OrderItem;
 import fudan.se.lab4.dto.Rule;
+import fudan.se.lab4.entity.Drinks;
+import fudan.se.lab4.repository.impl.CappuccinoRepositoryImpl;
+import fudan.se.lab4.repository.impl.EspressoRepositoryImpl;
+import fudan.se.lab4.repository.impl.GreenTeaRepositoryImpl;
+import fudan.se.lab4.repository.impl.RedTeaRepositoryImpl;
 import fudan.se.lab4.service.RuleService;
 import fudan.se.lab4.dto.RuleResult;
+import fudan.se.lab4.service.UserService;
+import fudan.se.lab4.util.DrinkUtil;
 
-import java.util.ArrayList;
+import java.util.*;
 
 public class RuleServiceImpl implements RuleService {
     @Override
     public RuleResult discount(RuleContext ruleContext) {
-        int id=ruleContext.getUserId();
-        //客户资格类型
-        int type=new UserServiceImpl().getType(id);
-        //计算选择策略部分
-        ArrayList<Rule> rules=new ArrayList<>();
-        getRules(rules);
-        return chooseRules(type,rules);
-    }
-    //这一段本来是要与数据库交互，读出本次促销活动包含的促销规则的，
-    // 没有数据库，暂时以助教给的方案写死，如果需要扩展的话，在这里添加修改即可
-    //先假设卡布奇诺的商品id为1，浓缩咖啡商品id为2，红茶id为3，绿茶id为4,商品其他信息可以调用goodsService接口
-    //如果不想用id，你把它改成用名字标识符也行，随你
-    public void getRules(ArrayList<Rule> rules) {
-        ArrayList<Integer> cap=new ArrayList<Integer>();
-        cap.add(1);
-        rules.add(new Rule(0x01,0,0,2,0.5,true,cap));
-        ArrayList<Integer> esp=new ArrayList<Integer>();
-        esp.add(2);
-        rules.add(new Rule(0x00,0,0,2,0.8,true,esp));
-        ArrayList<Integer> tea=new ArrayList<Integer>();
-        tea.add(3);
-        tea.add(4);
-        rules.add(new Rule(0x00,0,1,3,1,true,tea));
-        //加全场优惠
-        rules.add(new Rule(0x10,0,0,100,30,true,null));
-    }
-    //你需要实现这个函数，ruleResult是一个对象，封装促销规则的返回，你自己设计吧
-    public RuleResult chooseRules(int user_type,ArrayList<Rule> rules) {
+//        int id=ruleContext.getUserId();
+//        int type=new UserServiceImpl().getType(id);//客户资格类型
+        Rule rule = ruleContext.getRule();//单条策略
+        //profitType：0是满减，1是满赠，2是打折
+        switch (rule.getProfitType()){
+            case 0:
+                return discountType0(ruleContext,rule);
+            case 1:
+                return discountType1(ruleContext,rule);
+            case 2:
+                return discountType2(ruleContext,rule);
+        }
         return null;
     }
+
+    private RuleResult discountType0(RuleContext ruleContext, Rule rule){ //满减
+        double discount = 0.0;
+        String discription = "";
+        Double priceBeforeCal = 0.0;
+        if(rule.getOriented() == null){ //  优惠对象是全体
+            priceBeforeCal = ruleContext.getPurePrice();
+        }
+        //TODO 未来可以有不是针对所有商品的满减，本次lab不要求
+
+        if(priceBeforeCal >= rule.getCondition()){  //价格满足要求
+            if(rule.isCanAdd()){
+                int times = (int)(priceBeforeCal / rule.getCondition());
+                discount = times * rule.getProfit();
+            }else {
+                discount = rule.getProfit();
+            }
+            discription = "满" + rule.getCondition() + "减" + rule.getProfit();
+        }
+        return new RuleResult(rule,discount,discription);
+    }
+
+    private RuleResult discountType1(RuleContext ruleContext, Rule rule){   //满赠
+        String discription = "";
+        double discount = 0.0;
+        Order order = ruleContext.getOrder();
+        DrinkUtil drinkUtil = new DrinkUtil();
+        Map<String,Integer> drinkNameAndNum = new HashMap<String, Integer>();
+        int num = 0;
+        for (OrderItem orderItem : order.getOrderItems()){
+            if(isInOrientedList(orderItem,rule)){
+                num++;
+                if(!drinkNameAndNum.containsKey(orderItem.getName())){
+                    drinkNameAndNum.put(orderItem.getName(),1);
+                }else {
+                    drinkNameAndNum.put(orderItem.getName(),drinkNameAndNum.get(orderItem.getName()) + 1);
+                }
+            }
+        }
+        if(rule.getFreeDrinks() == null){
+            List<Map.Entry<String,Integer>> sortList = new ArrayList<Map.Entry<String,Integer>>(drinkNameAndNum.entrySet());
+            Collections.sort(sortList, new Comparator<Map.Entry<String, Integer>>() {
+                @Override
+                public int compare(Map.Entry<String, Integer> o1, Map.Entry<String, Integer> o2) {
+                    return (int)drinkUtil.getDrinks(o2.getKey()).getPrice()*100 - (int)drinkUtil.getDrinks(o1.getKey()).getPrice()*100 ;
+                }
+            });
+            int sub = rule.getCondition() + 1;
+            if(num > rule.getCondition()){
+                if(rule.isCanAdd()){
+                    for(Map.Entry<String,Integer> entry : sortList){
+                        Drinks drink = drinkUtil.getDrinks(entry.getKey());
+                        if(num > 0 && (entry.getValue()*sub) >= num){
+                            discount += num/sub * drink.getPrice();
+                        }else if(num > 0){
+                            discount += entry.getValue() * drink.getPrice();
+                            num -= entry.getValue() * sub;
+                        }
+                    }
+                }else {
+                    discount += drinkUtil.getDrinks(sortList.get(0).getKey()).getPrice();
+                }
+            }
+
+            for(Map.Entry<String,Integer> entry : sortList){
+                discription += entry.getKey()+" ";
+            }
+            discription += "买"+rule.getCondition()+"送"+rule.getProfit();
+        }
+        //TODO 之后可以拓展送的是别的饮料的情况
+
+        discription = (discount == 0.0)?"":discription;
+        return new RuleResult(rule,discount,discription);
+    }
+
+    private RuleResult discountType2(RuleContext ruleContext, Rule rule){ //打折
+        String discription = "";
+        Order order = ruleContext.getOrder();
+        DrinkUtil drinkUtil = new DrinkUtil();
+        Map<String,Integer> drinkNameAndNum = new HashMap<String, Integer>();
+        for (OrderItem orderItem : order.getOrderItems()){
+            if(isInOrientedList(orderItem,rule)){
+                if(!drinkNameAndNum.containsKey(orderItem.getName())){
+                    drinkNameAndNum.put(orderItem.getName(),1);
+                }else {
+                    drinkNameAndNum.put(orderItem.getName(),drinkNameAndNum.get(orderItem.getName()) + 1);
+                }
+            }
+        }
+        double discount = 0.0;
+        for(Map.Entry<String,Integer> entry : drinkNameAndNum.entrySet()){
+            Drinks drink = drinkUtil.getDrinks(entry.getKey());
+            if(entry.getValue() >= rule.getCondition()){
+                if(rule.isCanAdd()){
+                    int times = (int)(entry.getValue() / rule.getCondition());
+                    discount += times * rule.getDiscountRange() * rule.getProfit() * drink.getPrice();
+                }else {
+                    discount += rule.getDiscountRange() * rule.getProfit() * drink.getPrice();
+                }
+                discription += entry.getValue()+": "+"每"+rule.getCondition()+ "杯,"+rule.getDiscountRange()+"杯"+(rule.getProfit()*10)+"折; ";
+            }
+        }
+        return new RuleResult(rule,discount,discription);
+
+    }
+
+    private boolean isInOrientedList(OrderItem orderItem, Rule rule){
+        for(Drinks d : rule.getOriented()){
+            if(d.getSize() == 0){
+                if(d.getName().equals(orderItem.getName())){
+                    return true;
+                }
+            }else {
+                if(d.getName().equals(orderItem.getName()) && d.getSize() == orderItem.getSize()){
+                    return true;
+                }
+            }
+
+        }
+        return false;
+    }
+
 }

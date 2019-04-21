@@ -33,6 +33,9 @@ public abstract class Drinks {
     public void setPrice(double price) {
         this.price = price;
     }
+    public void setSizeInSaleRule(int size){
+        this.size = size;
+    }//允许size为0
 
     public abstract double cost();
 }
