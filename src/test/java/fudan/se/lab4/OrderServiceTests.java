@@ -174,13 +174,21 @@ public class OrderServiceTests {
     public void tt(){
         List<OrderItem> orderItems = new ArrayList<>();
         List<Ingredient> ingredients = new ArrayList<>();
-        item = new OrderItem("espresso",ingredients,3);
+        item = new OrderItem("redTea",ingredients,3);
         orderItems.add(item);
-        item = new OrderItem("espresso",ingredients,3);
+        item = new OrderItem("greenTea",ingredients,3);
         orderItems.add(item);
-        item = new OrderItem("espresso",ingredients,3);
+        item = new OrderItem("greenTea",ingredients,3);
         orderItems.add(item);
-        item = new OrderItem("espresso",ingredients,3);
+        item = new OrderItem("greenTea",ingredients,3);
+        orderItems.add(item);
+        item = new OrderItem("greenTea",ingredients,3);
+        orderItems.add(item);
+        item = new OrderItem("greenTea",ingredients,3);
+        orderItems.add(item);
+        item = new OrderItem("greenTea",ingredients,3);
+        orderItems.add(item);
+        item = new OrderItem("greenTea",ingredients,3);
         orderItems.add(item);
         paymentInfo = orderService.pay(new Order("0", orderItems));
         double a = paymentInfo.getDiscount();

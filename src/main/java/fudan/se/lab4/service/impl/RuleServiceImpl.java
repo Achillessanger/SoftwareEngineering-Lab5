@@ -82,6 +82,7 @@ public class RuleServiceImpl implements RuleService {
                         Drinks drink = drinkUtil.getDrinks(entry.getKey());
                         if(num > 0 && (entry.getValue()*sub) >= num){
                             discount += (num/sub) * drink.getPrice() * rule.getProfit();
+                            num -= (num/sub) * sub;
                         }else if(num > 0){
                             discount += entry.getValue() * drink.getPrice() * rule.getProfit();
                             num -= entry.getValue() * sub;
@@ -89,6 +90,7 @@ public class RuleServiceImpl implements RuleService {
                     }
                 }else {
                     discount += drinkUtil.getDrinks(sortList.get(0).getKey()).getPrice() * rule.getProfit();
+                    num = 0;
                 }
             }
 
