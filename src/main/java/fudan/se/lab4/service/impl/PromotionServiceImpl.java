@@ -12,7 +12,7 @@ import java.util.*;
 public class PromotionServiceImpl {
     ArrayList<Rule> rules = initSaleRule();
 
-    private ArrayList<Rule> initSaleRule(){
+    public ArrayList<Rule> initSaleRule(){
         ArrayList<Rule> rules = new ArrayList<>();
         //profitType：0是满减，1是满赠，2是打折
         Drinks orient1 = new Espresso();
@@ -44,13 +44,10 @@ public class PromotionServiceImpl {
 
     public PromotionResult chooseRules(Order order, double purePrice) {
         class DiscountAndPromotion{
-            Double totalDiscount;
-            ArrayList<Rule> choosedRules;
-            List<String> totalDis = new ArrayList<>();
-            DiscountAndPromotion(Double d,ArrayList<Rule> a){
+            double totalDiscount;
+            List<String> totalDes = new ArrayList<>();
+            DiscountAndPromotion(Double d){
                 totalDiscount = d;
-                choosedRules = a;
-                choosedRules = new ArrayList<>();
             }
 
         }
@@ -62,13 +59,15 @@ public class PromotionServiceImpl {
             RuleContext ruleContext = new RuleContext(order,rule,purePrice);
             ruleResult = ruleService.discount(ruleContext);
             if(!eachPromotionAndDiscount.containsKey(rule.getGroupId())){
-                DiscountAndPromotion discountAndPromotion = new DiscountAndPromotion(ruleResult.getDiscount(),new ArrayList<Rule>(){{add(rule);}});
-                discountAndPromotion.totalDis .add(ruleResult.getRuleDiscription());
+                DiscountAndPromotion discountAndPromotion = new DiscountAndPromotion(ruleResult.getDiscount());
+                if(ruleResult.getDiscount() != 0.0)
+                    discountAndPromotion.totalDes .add(ruleResult.getRuleDescription());
                 eachPromotionAndDiscount.put(rule.getGroupId(),discountAndPromotion);
             }else {
                 double plus = ruleResult.getDiscount();
                 eachPromotionAndDiscount.get(rule.getGroupId()).totalDiscount += plus;
-                eachPromotionAndDiscount.get(rule.getGroupId()).totalDis.add(ruleResult.getRuleDiscription());
+                if(ruleResult.getDiscount() != 0.0)
+                    eachPromotionAndDiscount.get(rule.getGroupId()).totalDes.add(ruleResult.getRuleDescription());
             }
         }
 
@@ -80,7 +79,7 @@ public class PromotionServiceImpl {
             }
         });
 
-        return new PromotionResult(sortList.get(0).getValue().totalDis,sortList.get(0).getValue().totalDiscount);
+        return new PromotionResult(sortList.get(0).getValue().totalDes,sortList.get(0).getValue().totalDiscount);
     }
 
 
