@@ -22,9 +22,6 @@ import java.util.List;
 
 import static org.junit.Assert.assertTrue;
 
-
-//todo 配料列表
-
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class OrderServiceTests {
@@ -53,7 +50,7 @@ public class OrderServiceTests {
         orderService.pay(null);
     }
 
-    //todo lab4中订单的id为空或者重复不需要检查？
+    //todo lab4中订单的id为空或者重复不需要检查
 //    @Test
 //    public void testOrderIdNull() {
 //        thrown.expect(RuntimeException.class);
@@ -145,7 +142,7 @@ public class OrderServiceTests {
         //1. // todo 多余
         orderItems.add(new OrderItem("cappuccino", new ArrayList<>(), 1));
         orderItems.add(new OrderItem("espresso", new ArrayList<>(), 1));
-        paymentInfo = orderService.pay(new Order("coffe", orderItems));
+        paymentInfo = orderService.pay(new Order("coffee", orderItems));
         assertTrue(paymentInfoEquals(paymentInfo, new PaymentInfo(46, 0, 46, EMPTYMSGS)));
 
         //2. // todo 多余
@@ -349,12 +346,12 @@ public class OrderServiceTests {
         assertTrue(paymentInfoEquals(paymentInfo, new PaymentInfo(48, 0, 48, msgs)));
 
         //3.
+        msgs.add("espresso: 每2杯,2杯8.0折");
         orderItems.remove(1);
         List<Ingredient> ingredients3 = new ArrayList<>();
         ingredients3.add(new Ingredient("cream", 1));
         orderItems.add(new OrderItem("espresso", ingredients3, 3));
         paymentInfo = orderService.pay(new Order("3", orderItems));
-        msgs.add("espresso: 每2杯,2杯8.0折 ");
         assertTrue(paymentInfoEquals(paymentInfo, new PaymentInfo(53, 8, 45, msgs)));
 
         //4.
@@ -379,8 +376,8 @@ public class OrderServiceTests {
         paymentInfo = orderService.pay(new Order("1", orderItems));
         assertTrue(paymentInfoEquals(paymentInfo, new PaymentInfo(24, 0, 24, msgs)));
 
+        msgs.add("cappuccino: 每2杯,1杯5.0折");
         //2.
-        msgs.add("cappuccino: 每2杯,1杯5.0折 ");
         orderItems.add(new OrderItem("cappuccino", new ArrayList<>(), 3));
         paymentInfo = orderService.pay(new Order("2", orderItems));
         assertTrue(paymentInfoEquals(paymentInfo, new PaymentInfo(52, 11, 41, msgs)));
@@ -398,21 +395,7 @@ public class OrderServiceTests {
         orderItems.add(new OrderItem("cappuccino", new ArrayList<>(), 2));
         orderItems.add(new OrderItem("cappuccino", new ArrayList<>(), 3));
         paymentInfo = orderService.pay(new Order("4", orderItems));
-        assertTrue(paymentInfoEquals(paymentInfo, new PaymentInfo(74, 11, 63, msgs)));
-    }
-
-
-    //todo error
-    @Test
-    public void test() {
-        List<OrderItem> orderItems = new ArrayList<>();
-        List<Ingredient> ingredients = new ArrayList<>();
-        orderItems.add(new OrderItem("cappuccino", ingredients, 1));
-        System.out.println(orderItems.get(0).getIngredients().size());
-        ingredients.add(new Ingredient("cream", 1));
-        orderItems.add(new OrderItem("cappuccino", ingredients, 1));
-        paymentInfo = orderService.pay(new Order("3", orderItems));
-        printDebug(paymentInfo);// error: 50 11 39; correct: 49 11 38
+        assertTrue(paymentInfoEquals(paymentInfo, new PaymentInfo(78, 11, 67, msgs)));
     }
 
     //todo delete
@@ -428,7 +411,7 @@ public class OrderServiceTests {
     public void testRedTeaPromotion() {
         //1.3杯小杯红茶
         //2.4杯小杯红茶
-        //3.5杯小杯红茶
+        //3.9杯小杯红茶
         //4.4杯红茶，其中一杯为大杯
         //5.4杯红茶，其中一杯加入配料
 
@@ -442,11 +425,11 @@ public class OrderServiceTests {
         paymentInfo = orderService.pay(new Order("1", orderItems));
         assertTrue(paymentInfoEquals(paymentInfo, new PaymentInfo(60, 0, 60, msgs)));
 
-        msgs.add("redTea :买3杯送1杯 ");
+        msgs.add("redTea :买3杯送1杯");
         //4.
         orderItems.add(new OrderItem("redTea", new ArrayList<>(), 3));
         paymentInfo = orderService.pay(new Order("4", orderItems));
-        assertTrue(paymentInfoEquals(paymentInfo, new PaymentInfo(65, 18, 57, msgs)));
+        assertTrue(paymentInfoEquals(paymentInfo, new PaymentInfo(83, 18, 65, msgs)));
 
         //5.
         orderItems.remove(3);
@@ -454,18 +437,20 @@ public class OrderServiceTests {
         ingredients5.add(new Ingredient("cream", 1));
         orderItems.add(new OrderItem("redTea", ingredients5, 3));
         paymentInfo = orderService.pay(new Order("5", orderItems));
-        assertTrue(paymentInfoEquals(paymentInfo, new PaymentInfo(66, 18, 58, msgs)));
+        assertTrue(paymentInfoEquals(paymentInfo, new PaymentInfo(84, 18, 66, msgs)));
 
         //2.
         orderItems.remove(3);
         orderItems.add(new OrderItem("redTea", new ArrayList<>(), 1));
         paymentInfo = orderService.pay(new Order("2", orderItems));
-        assertTrue(paymentInfoEquals(paymentInfo, new PaymentInfo(62, 18, 44, msgs)));
+        assertTrue(paymentInfoEquals(paymentInfo, new PaymentInfo(80, 18, 62, msgs)));
 
         //3.
-        orderItems.add(new OrderItem("redTea", new ArrayList<>(), 1));
+        for (int i = 0; i < 5; i++) {
+            orderItems.add(new OrderItem("redTea", new ArrayList<>(), 1));
+        }
         paymentInfo = orderService.pay(new Order("3", orderItems));
-        assertTrue(paymentInfoEquals(paymentInfo, new PaymentInfo(82, 18, 64, msgs)));
+        assertTrue(paymentInfoEquals(paymentInfo, new PaymentInfo(180, 36, 144, msgs)));
 
     }
 
@@ -475,12 +460,12 @@ public class OrderServiceTests {
         //1.4杯小杯绿茶
         List<OrderItem> orderItems = new ArrayList<>();
         List<String> msgs = new ArrayList<>();
-        msgs.add("greenTea :买3杯送1杯 ");
+        msgs.add("greenTea :买3杯送1杯");
         for (int i = 0; i < 4; i++) {
             orderItems.add(new OrderItem("greenTea", new ArrayList<>(), 1));
         }
         paymentInfo = orderService.pay(new Order("1", orderItems));
-        assertTrue(paymentInfoEquals(paymentInfo, new PaymentInfo(50, 16, 34, msgs)));
+        assertTrue(paymentInfoEquals(paymentInfo, new PaymentInfo(72, 16, 56, msgs)));
     }
 
     // 对绿茶的优惠方式一的测试
@@ -491,7 +476,7 @@ public class OrderServiceTests {
         //3.满减，九杯茶，一杯红茶
         List<OrderItem> orderItems = new ArrayList<>();
         List<String> msgs = new ArrayList<>();
-        msgs.add("redTea greenTea :买3杯送1杯 ");
+        msgs.add("redTea greenTea :买3杯送1杯");
 
         //1.
         for (int i = 0; i < 7; i++) {
@@ -507,11 +492,11 @@ public class OrderServiceTests {
         assertTrue(paymentInfoEquals(paymentInfo, new PaymentInfo(164, 34, 130, msgs)));
 
         //2.
-        orderItems.remove(8);
+        orderItems.remove(0);
         orderItems.remove(0);
         orderItems.add(new OrderItem("redTea", new ArrayList<>(), 1));
         paymentInfo = orderService.pay(new Order("1", orderItems));
-        assertTrue(paymentInfoEquals(paymentInfo, new PaymentInfo(148, 36, 114, msgs)));
+        assertTrue(paymentInfoEquals(paymentInfo, new PaymentInfo(148, 36, 112, msgs)));
     }
 
     // 对茶的优惠方式累加的测试
@@ -523,13 +508,13 @@ public class OrderServiceTests {
 
         List<OrderItem> orderItems = new ArrayList<>();
         List<String> msgs = new ArrayList<>();
-        msgs.add("满100减30.0 ");
 
         //1.
         orderItems.add(new OrderItem("espresso", new ArrayList<>(), 1));
         paymentInfo = orderService.pay(new Order("1", orderItems));
         assertTrue(paymentInfoEquals(paymentInfo, new PaymentInfo(22, 0, 22, msgs)));
 
+        msgs.add("满100减30.0");
         //2.
         orderItems.add(new OrderItem("espresso", new ArrayList<>(), 2));
         for (int i = 0; i < 3; i++) {
@@ -560,8 +545,8 @@ public class OrderServiceTests {
         int i = 0;
 
         //1.
-        msgs.add("espresso: 每2杯,2杯8.0折 ");
-        msgs.add("cappuccino: 每2杯,1杯5.0折 ");
+        msgs.add("espresso: 每2杯,2杯8.0折");
+        msgs.add("cappuccino: 每2杯,1杯5.0折");
         for (; i < 2; i++) {
             orderItems.add(new OrderItem("espresso", new ArrayList<>(), 3));
         }
@@ -573,8 +558,8 @@ public class OrderServiceTests {
 
         //2.
         msgs.clear();
-        msgs.add("greenTea :买3杯送1杯 ");
-        msgs.add("cappuccino: 每2杯,1杯5.0折 ");
+        msgs.add("greenTea :买3杯送1杯");
+        msgs.add("cappuccino: 每2杯,1杯5.0折");
         orderItems.clear();
         for (i = 0; i < 8; i++) {
             orderItems.add(new OrderItem("greenTea", new ArrayList<>(), 1));
@@ -587,8 +572,8 @@ public class OrderServiceTests {
 
         //3.
         msgs.clear();
-        msgs.add("espresso: 每2杯,2杯8.0折 ");
-        msgs.add("greenTea :买3杯送1杯 ");
+        msgs.add("espresso: 每2杯,2杯8.0折");
+        msgs.add("greenTea :买3杯送1杯");
         orderItems.clear();
         for (i = 0; i < 8; i++) {
             orderItems.add(new OrderItem("greenTea", new ArrayList<>(), 1));
@@ -600,10 +585,11 @@ public class OrderServiceTests {
         assertTrue(paymentInfoEquals(paymentInfo, new PaymentInfo(196, 40, 156, msgs)));
 
         //4.
+        orderItems.clear();
         msgs.clear();
-        msgs.add("espresso: 每2杯,2杯8.0折 ");
-        msgs.add("greenTea :买3杯送1杯 ");
-        msgs.add("cappuccino: 每2杯,1杯5.0折 ");
+        msgs.add("espresso: 每2杯,2杯8.0折");
+        msgs.add("greenTea :买3杯送1杯");
+        msgs.add("cappuccino: 每2杯,1杯5.0折");
         for (i = 0; i < 2; i++) {
             orderItems.add(new OrderItem("espresso", new ArrayList<>(), 3));
         }
@@ -620,15 +606,15 @@ public class OrderServiceTests {
     // 两种优惠都有，最优选择的测试
     @Test
     public void testOptimalPromotion() {
-        //1.两个优惠都有，但是满减最优
-        //2.两个优惠都有，但是组合优惠最优
+        //1.两个优惠都有，但是满减最优：5杯红茶
+        //2.两个优惠都有，但是组合优惠最优：
         //3.两个优惠都有，但是两个优惠方式一样
 
         List<OrderItem> orderItems = new ArrayList<>();
         List<String> msgs = new ArrayList<>();
 
         //1.
-        msgs.add("满100减30.0 ");
+        msgs.add("满100减30.0");
         for (int i = 0; i < 5; i++) {
             orderItems.add(new OrderItem("redTea", new ArrayList<>(), 1));
         }
@@ -636,8 +622,9 @@ public class OrderServiceTests {
         assertTrue(paymentInfoEquals(paymentInfo, new PaymentInfo(100, 30, 70, msgs)));
 
         //2.
+        orderItems.clear();
         msgs.clear();
-        msgs.add("redTea greenTea :买3杯送1杯 ");
+        msgs.add("redTea greenTea :买3杯送1杯");
         for (int i = 0; i < 7; i++) {
             orderItems.add(new OrderItem("greenTea", new ArrayList<>(), 1));
         }
@@ -646,13 +633,15 @@ public class OrderServiceTests {
         assertTrue(paymentInfoEquals(paymentInfo, new PaymentInfo(146, 34, 112, msgs)));
 
         //3.
+        orderItems.clear();
         msgs.clear();
-        msgs.add("greenTea :买3杯送1杯 ");
+        msgs.add("greenTea :买3杯送1杯");
         for (int i = 0; i < 20; i++) {
             orderItems.add(new OrderItem("greenTea", new ArrayList<>(), 1));
         }
         paymentInfo = orderService.pay(new Order("3", orderItems));
-        assertTrue(paymentInfoEquals(paymentInfo, new PaymentInfo(320, 90, 230, msgs)));
+        printDebug(paymentInfo);
+        assertTrue(paymentInfoEquals(paymentInfo, new PaymentInfo(360, 90, 270, msgs)));
 
     }
 
@@ -664,13 +653,13 @@ public class OrderServiceTests {
         if (null == pay1 || null == pay2) {
             return false;
         }
-        if (pay1.getPrice() != pay2.getPrice()) {
+        if (Math.abs(pay1.getPrice() - pay2.getPrice()) > 0.01) {
             return false;
         }
-        if (pay1.getDiscount() != pay2.getDiscount()) {
+        if (Math.abs(pay1.getDiscount() - pay2.getDiscount()) > 0.01) {
             return false;
         }
-        if (pay1.getDiscountPrice() != pay2.getDiscountPrice()) {
+        if (Math.abs(pay1.getDiscountPrice() - pay2.getDiscountPrice()) > 0.01) {
             return false;
         }
         List<String> msgs = pay1.getMsgs();
