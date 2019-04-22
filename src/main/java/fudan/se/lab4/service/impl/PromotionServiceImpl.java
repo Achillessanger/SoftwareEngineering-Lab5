@@ -6,10 +6,11 @@ import fudan.se.lab4.dto.PromotionResult;
 import fudan.se.lab4.dto.Rule;
 import fudan.se.lab4.dto.RuleResult;
 import fudan.se.lab4.entity.*;
+import fudan.se.lab4.service.PromotionService;
 
 import java.util.*;
 
-public class PromotionServiceImpl {
+public class PromotionServiceImpl implements PromotionService {
     ArrayList<Rule> rules = initSaleRule();
 
     //本来应该从数据库的促销规则表中读取数据，因为本次lab不涉及数据库表设计，故在此写死，若要添加或修改促销规则，在此处修改一次即可
@@ -44,6 +45,7 @@ public class PromotionServiceImpl {
     }
 
 
+    @Override
     public PromotionResult chooseRules(Order order, double purePrice) {
         class DiscountAndPromotion{
             double totalDiscount;
