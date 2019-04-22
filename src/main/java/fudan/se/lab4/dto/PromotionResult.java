@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PromotionResult {
-    List<String> promotionType;
+    private List<String> promotionType;
     private double discount;
     public PromotionResult(List<String> promotionType , double discount){
         this.promotionType = promotionType;

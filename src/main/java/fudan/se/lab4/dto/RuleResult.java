@@ -3,7 +3,7 @@ package fudan.se.lab4.dto;
 public class RuleResult {
     private Rule rule;
     private String ruleDescription;
-    double discount;
+    private double discount;
     public RuleResult(Rule rule,double discount, String ruleDescription){
         this.rule = rule;
         this.discount = discount;
