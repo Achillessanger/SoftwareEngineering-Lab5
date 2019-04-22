@@ -129,7 +129,7 @@ public class RuleServiceImpl implements RuleService {
                 }else {
                     discount += rule.getDiscountRange() * (1-rule.getProfit()) * drink.getPrice();
                 }
-                description += entry.getKey()+": "+"每"+rule.getCondition()+ "杯,"+rule.getDiscountRange()+"杯"+(rule.getProfit()*10)+"折 ";
+                description += entry.getKey()+": "+"每"+rule.getCondition()+ "杯,"+rule.getDiscountRange()+"杯"+(rule.getProfit()*10)+"折";
             }
         }
         return new RuleResult(rule,discount,description);
