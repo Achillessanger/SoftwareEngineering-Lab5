@@ -125,9 +125,9 @@ public class RuleServiceImpl implements RuleService {
             if(entry.getValue() >= rule.getCondition()){
                 if(rule.isCanAdd()){
                     int times = (int)(entry.getValue() / rule.getCondition());
-                    discount += times * rule.getDiscountRange() * rule.getProfit() * drink.getPrice();
+                    discount += times * rule.getDiscountRange() * (1-rule.getProfit()) * drink.getPrice();
                 }else {
-                    discount += rule.getDiscountRange() * rule.getProfit() * drink.getPrice();
+                    discount += rule.getDiscountRange() * (1-rule.getProfit()) * drink.getPrice();
                 }
                 description += entry.getKey()+": "+"每"+rule.getCondition()+ "杯,"+rule.getDiscountRange()+"杯"+(rule.getProfit()*10)+"折 ";
             }

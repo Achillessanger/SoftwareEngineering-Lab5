@@ -170,7 +170,7 @@ public class OrderServiceTests {
         assertEquals(new PaymentInfo(70, 0, 70, new ArrayList<>()), paymentInfo);
     }
 
-    
+
     @Test
     public void testIngredient() {
         List<OrderItem> orderItems = new ArrayList<>();
