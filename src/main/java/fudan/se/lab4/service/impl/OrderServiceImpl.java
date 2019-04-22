@@ -2,6 +2,7 @@ package fudan.se.lab4.service.impl;
 
 import fudan.se.lab4.constant.InfoConstant;
 import fudan.se.lab4.dto.*;
+import fudan.se.lab4.service.OrderRuleService;
 import fudan.se.lab4.util.DrinkUtil;
 
 import fudan.se.lab4.entity.Drinks;
@@ -25,7 +26,9 @@ public class OrderServiceImpl implements OrderService {
         double price = getPaymentInfoPrice(order);
         double discount = 0.0;
         List<String> msgs;
-        PromotionResult promotionResult = (new PromotionServiceImpl()).chooseRules(order,price);
+
+        OrderRuleServiceImpl orderRuleService = new OrderRuleServiceImpl();
+        PromotionResult promotionResult = orderRuleService.calFinalDiscount(order,price);
         discount = promotionResult.getDiscount();
         msgs = promotionResult.getPromotionType();
         double discountPrice = price - discount;

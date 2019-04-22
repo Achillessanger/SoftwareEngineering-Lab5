@@ -31,7 +31,7 @@ public class RuleServiceImpl implements RuleService {
 
     private RuleResult discountType0(RuleContext ruleContext, Rule rule){ //满减
         double discount = 0.0;
-        String discription = "";
+        String description = "";
         Double priceBeforeCal = 0.0;
         if(rule.getOriented() == null){ //  优惠对象是全体
             priceBeforeCal = ruleContext.getPurePrice();
@@ -45,13 +45,13 @@ public class RuleServiceImpl implements RuleService {
             }else {
                 discount = rule.getProfit();
             }
-            discription = "满" + rule.getCondition() + "减" + rule.getProfit();
+            description = "满" + rule.getCondition() + "减" + rule.getProfit();
         }
-        return new RuleResult(rule,discount,discription);
+        return new RuleResult(rule,discount,description);
     }
 
     private RuleResult discountType1(RuleContext ruleContext, Rule rule){   //满赠
-        String discription = "";
+        String description = "";
         double discount = 0.0;
         Order order = ruleContext.getOrder();
         DrinkUtil drinkUtil = new DrinkUtil();
@@ -75,36 +75,38 @@ public class RuleServiceImpl implements RuleService {
                     return (int)drinkUtil.getDrinks(o2.getKey()).getPrice()*100 - (int)drinkUtil.getDrinks(o1.getKey()).getPrice()*100 ;
                 }
             });
-            int sub = rule.getCondition() + 1;
-            if(num > rule.getCondition()){
+            int sub = rule.getCondition() + (int)rule.getProfit();
+            if (num > rule.getCondition()){
                 if(rule.isCanAdd()){
                     for(Map.Entry<String,Integer> entry : sortList){
                         Drinks drink = drinkUtil.getDrinks(entry.getKey());
                         if(num > 0 && (entry.getValue()*sub) >= num){
-                            discount += num/sub * drink.getPrice();
+                            discount += (num/sub) * drink.getPrice() * rule.getProfit();
+                            num -= (num/sub) * sub;
                         }else if(num > 0){
-                            discount += entry.getValue() * drink.getPrice();
+                            discount += entry.getValue() * drink.getPrice() * rule.getProfit();
                             num -= entry.getValue() * sub;
                         }
                     }
                 }else {
-                    discount += drinkUtil.getDrinks(sortList.get(0).getKey()).getPrice();
+                    discount += drinkUtil.getDrinks(sortList.get(0).getKey()).getPrice() * rule.getProfit();
+                    num = 0;
                 }
             }
 
             for(Map.Entry<String,Integer> entry : sortList){
-                discription += entry.getKey()+" ";
+                description += entry.getKey()+" ";
             }
-            discription += "买"+rule.getCondition()+"送"+rule.getProfit();
+            description += ":买"+rule.getCondition()+"杯送"+(int)rule.getProfit()+"杯";
         }
         //TODO 之后可以拓展送的是别的饮料的情况
 
-        discription = (discount == 0.0)?"":discription;
-        return new RuleResult(rule,discount,discription);
+        description = (discount == 0.0)?"":description;
+        return new RuleResult(rule,discount,description);
     }
 
     private RuleResult discountType2(RuleContext ruleContext, Rule rule){ //打折
-        String discription = "";
+        String description = "";
         Order order = ruleContext.getOrder();
         DrinkUtil drinkUtil = new DrinkUtil();
         Map<String,Integer> drinkNameAndNum = new HashMap<String, Integer>();
@@ -123,14 +125,14 @@ public class RuleServiceImpl implements RuleService {
             if(entry.getValue() >= rule.getCondition()){
                 if(rule.isCanAdd()){
                     int times = (int)(entry.getValue() / rule.getCondition());
-                    discount += times * rule.getDiscountRange() * rule.getProfit() * drink.getPrice();
+                    discount += times * rule.getDiscountRange() * (1-rule.getProfit()) * drink.getPrice();
                 }else {
-                    discount += rule.getDiscountRange() * rule.getProfit() * drink.getPrice();
+                    discount += rule.getDiscountRange() * (1-rule.getProfit()) * drink.getPrice();
                 }
-                discription += entry.getValue()+": "+"每"+rule.getCondition()+ "杯,"+rule.getDiscountRange()+"杯"+(rule.getProfit()*10)+"折; ";
+                description += entry.getKey()+": "+"每"+rule.getCondition()+ "杯,"+rule.getDiscountRange()+"杯"+(rule.getProfit()*10)+"折 ";
             }
         }
-        return new RuleResult(rule,discount,discription);
+        return new RuleResult(rule,discount,description);
 
     }
 

@@ -11,27 +11,29 @@ import java.util.*;
 
 public class PromotionServiceImpl {
     ArrayList<Rule> rules = initSaleRule();
+
     //本来应该从数据库的促销规则表中读取数据，因为本次lab不涉及数据库表设计，故在此写死，若要添加或修改促销规则，在此处修改一次即可
-    private ArrayList<Rule> initSaleRule(){
+
+    public ArrayList<Rule> initSaleRule(){
         ArrayList<Rule> rules = new ArrayList<>();
         //profitType：0是满减，1是满赠，2是打折
         Drinks orient1 = new Espresso();
-        orient1.setName("Espresso");
+        orient1.setName("espresso");
         orient1.setSizeInSaleRule(3);
         Drinks orient2 = new RedTea();
-        orient2.setName("RedTea");
+        orient2.setName("redTea");
         orient2.setSizeInSaleRule(0);
         Drinks orient3 = new GreenTea();
-        orient3.setName("GreenTea");
+        orient3.setName("greenTea");
         orient3.setSizeInSaleRule(0);
         Drinks orient4 = new Cappuccino();
-        orient4.setName("Cappuccino");
+        orient4.setName("cappuccino");
         orient4.setSizeInSaleRule(0);
 
         Drinks send1 = new RedTea();
-        send1.setName("RedTea");
+        send1.setName("redTea");
         Drinks send2 = new GreenTea();
-        send2.setName("GreenTea");
+        send2.setName("greenTea");
 
         rules.add(new Rule(1,0,2,2,2,0.8,true,new ArrayList<Drinks>(){{add(orient1);}},null));
         rules.add(new Rule(1,0,1,3,3,1,true,new ArrayList<Drinks>(){{add(orient2);add(orient3);}},null));
@@ -44,13 +46,10 @@ public class PromotionServiceImpl {
 
     public PromotionResult chooseRules(Order order, double purePrice) {
         class DiscountAndPromotion{
-            Double totalDiscount;
-            ArrayList<Rule> choosedRules;
-            List<String> totalDis = new ArrayList<>();
-            DiscountAndPromotion(Double d,ArrayList<Rule> a){
+            double totalDiscount;
+            List<String> totalDes = new ArrayList<>();
+            DiscountAndPromotion(Double d){
                 totalDiscount = d;
-                choosedRules = a;
-                choosedRules = new ArrayList<>();
             }
 
         }
@@ -62,13 +61,15 @@ public class PromotionServiceImpl {
             RuleContext ruleContext = new RuleContext(order,rule,purePrice);
             ruleResult = ruleService.discount(ruleContext);
             if(!eachPromotionAndDiscount.containsKey(rule.getGroupId())){
-                DiscountAndPromotion discountAndPromotion = new DiscountAndPromotion(ruleResult.getDiscount(),new ArrayList<Rule>(){{add(rule);}});
-                discountAndPromotion.totalDis .add(ruleResult.getRuleDiscription());
+                DiscountAndPromotion discountAndPromotion = new DiscountAndPromotion(ruleResult.getDiscount());
+                if(ruleResult.getDiscount() != 0.0)
+                    discountAndPromotion.totalDes .add(ruleResult.getRuleDescription());
                 eachPromotionAndDiscount.put(rule.getGroupId(),discountAndPromotion);
             }else {
                 double plus = ruleResult.getDiscount();
                 eachPromotionAndDiscount.get(rule.getGroupId()).totalDiscount += plus;
-                eachPromotionAndDiscount.get(rule.getGroupId()).totalDis.add(ruleResult.getRuleDiscription());
+                if(ruleResult.getDiscount() != 0.0)
+                    eachPromotionAndDiscount.get(rule.getGroupId()).totalDes.add(ruleResult.getRuleDescription());
             }
         }
 
@@ -80,7 +81,7 @@ public class PromotionServiceImpl {
             }
         });
 
-        return new PromotionResult(sortList.get(0).getValue().totalDis,sortList.get(0).getValue().totalDiscount);
+        return new PromotionResult(sortList.get(0).getValue().totalDes,sortList.get(0).getValue().totalDiscount);
     }
 
 

@@ -2,20 +2,20 @@ package fudan.se.lab4.dto;
 
 public class RuleResult {
     private Rule rule;
-    private String ruleDiscription;
+    private String ruleDescription;
     double discount;
-    public RuleResult(Rule rule,double discount, String ruleDiscription){
+    public RuleResult(Rule rule,double discount, String ruleDescription){
         this.rule = rule;
         this.discount = discount;
-        this.ruleDiscription = ruleDiscription;
+        this.ruleDescription = ruleDescription;
     }
 
     public Rule getRule() {
         return rule;
     }
 
-    public String getRuleDiscription() {
-        return ruleDiscription;
+    public String getRuleDescription() {
+        return ruleDescription;
     }
 
     public double getDiscount() {
