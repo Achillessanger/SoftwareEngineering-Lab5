@@ -76,12 +76,13 @@ public class RuleServiceImpl implements RuleService {
                 }
             });
             int sub = rule.getCondition() + (int)rule.getProfit();
-            if(num > rule.getCondition()){
+            if (num > rule.getCondition()){
                 if(rule.isCanAdd()){
                     for(Map.Entry<String,Integer> entry : sortList){
                         Drinks drink = drinkUtil.getDrinks(entry.getKey());
                         if(num > 0 && (entry.getValue()*sub) >= num){
                             discount += (num/sub) * drink.getPrice() * rule.getProfit();
+                            num -= (num/sub) * sub;
                         }else if(num > 0){
                             discount += entry.getValue() * drink.getPrice() * rule.getProfit();
                             num -= entry.getValue() * sub;
@@ -89,6 +90,7 @@ public class RuleServiceImpl implements RuleService {
                     }
                 }else {
                     discount += drinkUtil.getDrinks(sortList.get(0).getKey()).getPrice() * rule.getProfit();
+                    num = 0;
                 }
             }
 
@@ -123,9 +125,9 @@ public class RuleServiceImpl implements RuleService {
             if(entry.getValue() >= rule.getCondition()){
                 if(rule.isCanAdd()){
                     int times = (int)(entry.getValue() / rule.getCondition());
-                    discount += times * rule.getDiscountRange() * rule.getProfit() * drink.getPrice();
+                    discount += times * rule.getDiscountRange() * (1-rule.getProfit()) * drink.getPrice();
                 }else {
-                    discount += rule.getDiscountRange() * rule.getProfit() * drink.getPrice();
+                    discount += rule.getDiscountRange() * (1-rule.getProfit()) * drink.getPrice();
                 }
                 description += entry.getKey()+": "+"每"+rule.getCondition()+ "杯,"+rule.getDiscountRange()+"杯"+(rule.getProfit()*10)+"折 ";
             }
