@@ -1,18 +1,12 @@
 package fudan.se.lab4.service.impl;
 
-import com.sun.tools.corba.se.idl.constExpr.Or;
 import fudan.se.lab4.context.RuleContext;
 import fudan.se.lab4.dto.Order;
 import fudan.se.lab4.dto.OrderItem;
 import fudan.se.lab4.dto.Rule;
 import fudan.se.lab4.entity.Drinks;
-import fudan.se.lab4.repository.impl.CappuccinoRepositoryImpl;
-import fudan.se.lab4.repository.impl.EspressoRepositoryImpl;
-import fudan.se.lab4.repository.impl.GreenTeaRepositoryImpl;
-import fudan.se.lab4.repository.impl.RedTeaRepositoryImpl;
 import fudan.se.lab4.service.RuleService;
 import fudan.se.lab4.dto.RuleResult;
-import fudan.se.lab4.service.UserService;
 import fudan.se.lab4.util.DrinkUtil;
 
 import java.util.*;
