@@ -1,8 +1,6 @@
 package fudan.se.lab4.service.impl;
 
-import fudan.se.lab4.constant.InfoConstant;
 import fudan.se.lab4.dto.*;
-import fudan.se.lab4.service.OrderRuleService;
 import fudan.se.lab4.util.DrinkUtil;
 
 import fudan.se.lab4.entity.Drinks;
@@ -13,8 +11,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -28,7 +24,7 @@ public class OrderServiceImpl implements OrderService {
         List<String> msgs;
 
         OrderRuleServiceImpl orderRuleService = new OrderRuleServiceImpl();
-        PromotionResult promotionResult = orderRuleService.calFinalDiscount(order,price);
+        PromotionResult promotionResult = orderRuleService.calFinalDiscount(order, price);
         discount = promotionResult.getDiscount();
         msgs = promotionResult.getPromotionType();
         double discountPrice = price - discount;

@@ -5,9 +5,9 @@ import fudan.se.lab4.dto.PromotionResult;
 import fudan.se.lab4.service.OrderRuleService;
 
 public class OrderRuleServiceImpl {
-    public PromotionResult calFinalDiscount(Order order,double purePrice){
+    public PromotionResult calFinalDiscount(Order order, double purePrice) {
         PromotionServiceImpl promotionService = new PromotionServiceImpl();
         promotionService.initSaleRule();
-        return promotionService.chooseRules(order,purePrice);
+        return promotionService.chooseRules(order, purePrice);
     }
 }
