@@ -44,5 +44,6 @@ public class InfoConstant {
     public static final String CREATE_INGREDIENT_FAILED = "Failed to create tea, check csv.";
 
     public static final String FAILED_GET_DRINK = "Failed to get drinks";
+    public static final String INVALID_INGREDIENT = "Ingredient is invalid.";
 
 }
