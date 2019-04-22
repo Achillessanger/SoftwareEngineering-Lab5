@@ -1,7 +1,9 @@
 package fudan.se.lab4.util;
 
 import fudan.se.lab4.constant.InfoConstant;
+import fudan.se.lab4.dto.Order;
 import fudan.se.lab4.entity.Drinks;
+import fudan.se.lab4.dto.Ingredient;
 import fudan.se.lab4.repository.impl.CappuccinoRepositoryImpl;
 import fudan.se.lab4.repository.impl.EspressoRepositoryImpl;
 import fudan.se.lab4.repository.impl.GreenTeaRepositoryImpl;
@@ -25,6 +27,28 @@ public class DrinkUtil {
                 logger.info(InfoConstant.FAILED_GET_DRINK);
                 throw new RuntimeException(InfoConstant.FAILED_GET_DRINK);
             }
+        }
+    }
+
+    public static void isDrinkIngredientValid(Ingredient ingredient) {
+        if (ingredient.getNumber() < 0 || ingredient.getName() == null || !(ingredient.getName().equals("milk") || ingredient.getName().equals("chocolate") || ingredient.getName().equals("cream") || ingredient.getName().equals("sugar"))) {
+            logger.info(InfoConstant.INVALID_INGREDIENT);
+            throw new RuntimeException(InfoConstant.INVALID_INGREDIENT);
+        }
+    }
+
+    public static void isOrderValid(Order order) {
+        if (order == null || order.getOrderItems() == null || order.getOrderItems().size() == 0) {
+            logger.info(InfoConstant.ORDER_WRONG);
+            throw new RuntimeException(InfoConstant.ORDER_WRONG);
+        }
+    }
+
+    //对size检测已经在之前就有了
+    public static void isDrinksValid(Drinks drinks) {
+        if (!drinks.getDescription().equals(drinks.getName()) || drinks.getPrice() <= 0) {
+            logger.info(InfoConstant.ORDER_WRONG);
+            throw new RuntimeException(InfoConstant.ORDER_WRONG);
         }
     }
 }

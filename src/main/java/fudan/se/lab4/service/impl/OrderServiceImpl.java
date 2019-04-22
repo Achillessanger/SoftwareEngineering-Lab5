@@ -1,12 +1,10 @@
 package fudan.se.lab4.service.impl;
 
 import fudan.se.lab4.dto.*;
-import fudan.se.lab4.util.DrinkUtil;
-
 import fudan.se.lab4.entity.Drinks;
-
-import fudan.se.lab4.repository.impl.*;
+import fudan.se.lab4.repository.impl.IngredientRepositoryImpl;
 import fudan.se.lab4.service.OrderService;
+import fudan.se.lab4.util.DrinkUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -38,19 +36,20 @@ public class OrderServiceImpl implements OrderService {
     }
 
     private double getPaymentInfoPrice(Order order) {
+        DrinkUtil.isOrderValid(order);
         double totalPrice = 0.0;
         for (OrderItem orderItem : order.getOrderItems()) {
             double price = 0.0;
-            Drinks drinks = (new DrinkUtil()).getDrinks(orderItem.getName());
+            Drinks drinks = DrinkUtil.getDrinks(orderItem.getName());
             drinks.setSize(orderItem.getSize());
             price += drinks.cost();
             for (Ingredient ingredient : orderItem.getIngredients()) {
+                DrinkUtil.isDrinkIngredientValid(ingredient);
                 price += new IngredientRepositoryImpl().getIngredient(ingredient.getName()).getPrice() * ingredient.getNumber();
             }
             totalPrice += price;
         }
         return totalPrice;
-
     }
 
 //    private Drinks getDrinks(String name) {

@@ -65,14 +65,20 @@ public class OrderServiceTests {
         orderService.pay(new Order("nullOrderItem", null));
     }
 
-    // 测试订单中饮品数目不同的情况：0，1，3
+    // 测试订单中饮品数量为空
+    @Test
+    public void testOderItemEmpty() {
+        List<OrderItem> orderItems = new ArrayList<>();
+
+        thrown.expect(RuntimeException.class);
+        thrown.expectMessage(InfoConstant.ORDER_WRONG);
+        paymentInfo = orderService.pay(new Order("0", orderItems));
+    }
+
+    // 测试订单中饮品数目不同的情况：1，3
     @Test
     public void testOrderItemByNum() {
         List<OrderItem> orderItems = new ArrayList<>();
-
-        //test 0 OrderItem
-        paymentInfo = orderService.pay(new Order("0", orderItems));
-        assertTrue(paymentInfoEquals(paymentInfo, new PaymentInfo(0, 0, 0, EMPTYMSGS)));
 
         //test 1 OrderItem
         orderItems.add(new OrderItem("espresso", new ArrayList<>(), 1));
@@ -241,7 +247,7 @@ public class OrderServiceTests {
         List<Ingredient> ingredients = new ArrayList<>();
         thrown.expect(RuntimeException.class);
         String name = null;
-        thrown.expectMessage(MessageFormat.format(InfoConstant.ENTITY_NOT_FOUND, name));
+        thrown.expectMessage(InfoConstant.INVALID_INGREDIENT);
         ingredients.add(new Ingredient(name, 1));
         orderItems.add(new OrderItem("espresso", ingredients, 1));
         orderService.pay(new Order("nullIngredientName", orderItems));
@@ -254,7 +260,7 @@ public class OrderServiceTests {
         List<Ingredient> ingredients = new ArrayList<>();
         thrown.expect(RuntimeException.class);
         String name = "error";
-        thrown.expectMessage(MessageFormat.format(InfoConstant.ENTITY_NOT_FOUND, name));
+        thrown.expectMessage(InfoConstant.INVALID_INGREDIENT);
         ingredients.add(new Ingredient(name, 1));
         orderItems.add(new OrderItem("espresso", ingredients, 1));
         orderService.pay(new Order("nullIngredientName", orderItems));
@@ -632,7 +638,7 @@ public class OrderServiceTests {
         for (int i = 0; i < 4; i++) {
             orderItems.add(new OrderItem("cappuccino", new ArrayList<>(), 1));
         }
-        for(int i = 0; i < 2; i++){
+        for (int i = 0; i < 2; i++) {
             orderItems.add(new OrderItem("espresso", new ArrayList<>(), 3));
 
         }
