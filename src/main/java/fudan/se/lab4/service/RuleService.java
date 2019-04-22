@@ -4,5 +4,5 @@ import fudan.se.lab4.context.RuleContext;
 import fudan.se.lab4.dto.RuleResult;
 
 public interface RuleService {
-    public RuleResult discount(RuleContext ruleContext);
+   RuleResult discount(RuleContext ruleContext);
 }
