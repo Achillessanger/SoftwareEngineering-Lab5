@@ -1,5 +1,8 @@
 package fudan.se.lab4.service;
 
-public interface OrderRuleService {
+import fudan.se.lab4.dto.Order;
+import fudan.se.lab4.dto.PromotionResult;
 
+public interface OrderRuleService {
+    PromotionResult calFinalDiscount(Order order, double purePrice);
 }
