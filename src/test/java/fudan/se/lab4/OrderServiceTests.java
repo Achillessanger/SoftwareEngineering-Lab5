@@ -237,6 +237,7 @@ public class OrderServiceTests {
     public void testOrderIngredientNull() {
         List<OrderItem> orderItems = new ArrayList<>();
         thrown.expect(RuntimeException.class);
+        thrown.expectMessage(InfoConstant.INVALID_INGREDIENT);
         orderItems.add(new OrderItem("espresso", null, 1));
         orderService.pay(new Order("nullIngredient", orderItems));
     }
