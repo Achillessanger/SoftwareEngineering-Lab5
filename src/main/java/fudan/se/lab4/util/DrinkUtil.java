@@ -46,7 +46,7 @@ public class DrinkUtil {
 
     //对size检测已经在之前就有了
     public static void isDrinksValid(Drinks drinks) {
-        if (!drinks.getDescription().equals(drinks.getName()) || drinks.getPrice() <= 0) {
+        if (drinks.getPrice() <= 0) {
             logger.info(InfoConstant.ORDER_WRONG);
             throw new RuntimeException(InfoConstant.ORDER_WRONG);
         }

@@ -1,6 +1,5 @@
 package fudan.se.lab4;
 
-
 import fudan.se.lab4.constant.InfoConstant;
 import fudan.se.lab4.dto.Ingredient;
 import fudan.se.lab4.dto.Order;
@@ -16,7 +15,6 @@ import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,7 +25,7 @@ import static org.junit.Assert.assertTrue;
 public class OrderServiceTests {
     private OrderServiceImpl orderService;
     private PaymentInfo paymentInfo;
-    private final List<String> EMPTYMSGS = new ArrayList<>();
+    private List<String> EMPTYMSGS = new ArrayList<>();
 
     @Rule
     public ExpectedException thrown = ExpectedException.none();
@@ -41,12 +39,14 @@ public class OrderServiceTests {
     public void tearDown() {
         orderService = null;
         paymentInfo = null;
+        EMPTYMSGS = null;
     }
 
     // 测试订单为null
     @Test
     public void testOrderNull() {
         thrown.expect(RuntimeException.class);
+        thrown.expectMessage(InfoConstant.ORDER_WRONG);
         orderService.pay(null);
     }
 
@@ -62,6 +62,7 @@ public class OrderServiceTests {
     public void testOrderItemNull() {
         //test OrderItem null
         thrown.expect(RuntimeException.class);
+        thrown.expectMessage(InfoConstant.ORDER_WRONG);
         orderService.pay(new Order("nullOrderItem", null));
     }
 
@@ -69,7 +70,6 @@ public class OrderServiceTests {
     @Test
     public void testOderItemEmpty() {
         List<OrderItem> orderItems = new ArrayList<>();
-
         thrown.expect(RuntimeException.class);
         thrown.expectMessage(InfoConstant.ORDER_WRONG);
         paymentInfo = orderService.pay(new Order("0", orderItems));
@@ -97,6 +97,7 @@ public class OrderServiceTests {
     public void testDrinkNameNull() {
         List<OrderItem> orderItems = new ArrayList<>();
         thrown.expect(RuntimeException.class);
+        thrown.expectMessage(InfoConstant.FAILED_GET_DRINK);
         orderItems.add(new OrderItem(null, new ArrayList<>(), 1));
         orderService.pay(new Order("nullDrinkName", orderItems));
     }
@@ -240,15 +241,47 @@ public class OrderServiceTests {
         orderService.pay(new Order("nullIngredient", orderItems));
     }
 
+    // 对配料列表不同长度的测试
+    @Test
+    public void testOrderIngredientByNum() {
+        //1.配料列表的长度为0
+        //2.配料列表的长度为1
+        //3.配料列表的长度为3
+
+        List<OrderItem> orderItems = new ArrayList<>();
+
+        //1.
+        orderItems.add(new OrderItem("espresso", new ArrayList<>(), 1));
+        paymentInfo = orderService.pay(new Order("1", orderItems));
+        assertTrue(paymentInfoEquals(paymentInfo, new PaymentInfo(22, 0, 22, EMPTYMSGS)));
+
+        //2.
+        orderItems.clear();
+        List<Ingredient> ingredients2 = new ArrayList<>();
+        ingredients2.add(new Ingredient("cream", 1));
+        orderItems.add(new OrderItem("espresso", ingredients2, 1));
+        paymentInfo = orderService.pay(new Order("1", orderItems));
+        assertTrue(paymentInfoEquals(paymentInfo, new PaymentInfo(23, 0, 23, EMPTYMSGS)));
+
+        //3.
+        orderItems.clear();
+        List<Ingredient> ingredients3 = new ArrayList<>();
+        for (int i = 0; i < 3; i++) {
+            ingredients3.add(new Ingredient("cream", 1));
+        }
+        orderItems.add(new OrderItem("espresso", ingredients3, 1));
+        paymentInfo = orderService.pay(new Order("1", orderItems));
+        assertTrue(paymentInfoEquals(paymentInfo, new PaymentInfo(25, 0, 25, EMPTYMSGS)));
+    }
+
     // 测试配料name为null
     @Test
     public void testOrderIngredientNameNull() {
         List<OrderItem> orderItems = new ArrayList<>();
         List<Ingredient> ingredients = new ArrayList<>();
         thrown.expect(RuntimeException.class);
-        String name = null;
         thrown.expectMessage(InfoConstant.INVALID_INGREDIENT);
-        ingredients.add(new Ingredient(name, 1));
+        ingredients.add(new Ingredient(null, 1));
         orderItems.add(new OrderItem("espresso", ingredients, 1));
         orderService.pay(new Order("nullIngredientName", orderItems));
     }
@@ -259,9 +292,8 @@ public class OrderServiceTests {
         List<OrderItem> orderItems = new ArrayList<>();
         List<Ingredient> ingredients = new ArrayList<>();
         thrown.expect(RuntimeException.class);
-        String name = "error";
         thrown.expectMessage(InfoConstant.INVALID_INGREDIENT);
-        ingredients.add(new Ingredient(name, 1));
+        ingredients.add(new Ingredient("error", 1));
         orderItems.add(new OrderItem("espresso", ingredients, 1));
         orderService.pay(new Order("nullIngredientName", orderItems));
     }
@@ -284,7 +316,7 @@ public class OrderServiceTests {
         List<Ingredient> ingredients = new ArrayList<>();
 
         thrown.expect(RuntimeException.class);
-        //todo 有log信息吗？
+        thrown.expectMessage(InfoConstant.INVALID_INGREDIENT);
         ingredients.add(new Ingredient("cream", -1));
         orderItems.add(new OrderItem("espresso", ingredients, 1));
         orderService.pay(new Order("1", orderItems));
@@ -434,9 +466,9 @@ public class OrderServiceTests {
         orderItems.remove(3);
         List<Ingredient> ingredients5 = new ArrayList<>();
         ingredients5.add(new Ingredient("cream", 1));
-        orderItems.add(new OrderItem("redTea", ingredients5, 3));
+        orderItems.add(new OrderItem("redTea", ingredients5, 1));
         paymentInfo = orderService.pay(new Order("5", orderItems));
-        assertTrue(paymentInfoEquals(paymentInfo, new PaymentInfo(84, 18, 66, msgs)));
+        assertTrue(paymentInfoEquals(paymentInfo, new PaymentInfo(81, 18, 63, msgs)));
 
         //2.
         orderItems.remove(3);
@@ -450,7 +482,6 @@ public class OrderServiceTests {
         }
         paymentInfo = orderService.pay(new Order("3", orderItems));
         assertTrue(paymentInfoEquals(paymentInfo, new PaymentInfo(180, 36, 144, msgs)));
-
     }
 
     @Test
@@ -497,7 +528,7 @@ public class OrderServiceTests {
         assertTrue(paymentInfoEquals(paymentInfo, new PaymentInfo(148, 36, 112, msgs)));
     }
 
-    // 对茶的优惠方式累加的测试
+    // 对满100减30的优惠方式的测试
     @Test
     public void testFullReductionPromotion() {
         //1.<100
@@ -530,6 +561,7 @@ public class OrderServiceTests {
         assertTrue(paymentInfoEquals(paymentInfo, new PaymentInfo(110, 30, 80, msgs)));
     }
 
+    // 对组合优惠中不同饮品组合优惠的测试
     @Test
     public void testCombinationPromotion() {
         //1.两种咖啡
