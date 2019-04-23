@@ -14,6 +14,10 @@ import org.slf4j.LoggerFactory;
 public class DrinkUtil {
     private static Logger logger = LoggerFactory.getLogger(DrinkUtil.class);
     public static Drinks getDrinks(String name) {
+        if(name ==null){
+            logger.info(InfoConstant.FAILED_GET_DRINK);
+            throw new RuntimeException(InfoConstant.FAILED_GET_DRINK);
+        }
         switch (name) {
             case "cappuccino":
                 return new CappuccinoRepositoryImpl().getCappuccino(name);

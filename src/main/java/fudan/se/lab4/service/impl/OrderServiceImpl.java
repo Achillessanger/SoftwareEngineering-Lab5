@@ -1,5 +1,6 @@
 package fudan.se.lab4.service.impl;
 
+import fudan.se.lab4.constant.InfoConstant;
 import fudan.se.lab4.dto.*;
 import fudan.se.lab4.entity.Drinks;
 import fudan.se.lab4.repository.impl.IngredientRepositoryImpl;
@@ -43,6 +44,10 @@ public class OrderServiceImpl implements OrderService {
             Drinks drinks = DrinkUtil.getDrinks(orderItem.getName());
             drinks.setSize(orderItem.getSize());
             price += drinks.cost();
+            if(orderItem.getIngredients() ==null){
+                logger.info(InfoConstant.INVALID_INGREDIENT);
+                throw new RuntimeException(InfoConstant.INVALID_INGREDIENT);
+            }
             for (Ingredient ingredient : orderItem.getIngredients()) {
                 DrinkUtil.isDrinkIngredientValid(ingredient);
                 price += new IngredientRepositoryImpl().getIngredient(ingredient.getName()).getPrice() * ingredient.getNumber();
