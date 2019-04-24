@@ -81,7 +81,8 @@ public class RuleServiceImpl implements RuleService {
                     for (Map.Entry<String, Integer> entry : sortList) {
                         Drinks drink = drinkUtil.getDrinks(entry.getKey());
                         if (num > 0 && (entry.getValue() * sub) >= num) {
-                            discount += (double)((int) (num / sub)) * drink.getPrice() * rule.getProfit();
+                            int tmp = num / sub;
+                            discount +=  (double)tmp * drink.getPrice() * rule.getProfit();
                             num -= (num / sub) * sub;
                         } else if (num > 0) {
                             discount += entry.getValue() * drink.getPrice() * rule.getProfit();
