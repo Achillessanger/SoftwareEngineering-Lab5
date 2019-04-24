@@ -31,14 +31,18 @@ public class PromotionServiceImpl implements PromotionService {
         orient4.setName("cappuccino");
         orient4.setSizeInSaleRule(0);
 
-        Drinks send1 = new RedTea();
-        send1.setName("redTea");
-        Drinks send2 = new GreenTea();
-        send2.setName("greenTea");
+        ArrayList<Drinks> oriented1 = new ArrayList<>();
+        oriented1.add(orient1);
+        ArrayList<Drinks> oriented2 = new ArrayList<>();
+        oriented2.add(orient2);
+        oriented2.add(orient3);
+        ArrayList<Drinks> oriented3 = new ArrayList<>();
+        oriented3.add(orient4);
 
-        rules.add(new Rule(1,0,2,2,2,0.8,true,new ArrayList<Drinks>(){{add(orient1);}},null));
-        rules.add(new Rule(1,0,1,3,3,1,true,new ArrayList<Drinks>(){{add(orient2);add(orient3);}},null));
-        rules.add(new Rule(1,0,2,2,1,0.5,true,new ArrayList<Drinks>(){{add(orient4);}},null));
+
+        rules.add(new Rule(1,0,2,2,2,0.8,true,oriented1,null));
+        rules.add(new Rule(1,0,1,3,3,1,true,oriented2,null));
+        rules.add(new Rule(1,0,2,2,1,0.5,true,oriented3,null));
         rules.add(new Rule(2,0,0,100,100,30,true,null,null));
 
         return rules;
