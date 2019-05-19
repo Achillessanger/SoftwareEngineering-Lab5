@@ -3,6 +3,7 @@ package fudan.se.lab4.dto;
 import fudan.se.lab4.entity.Drinks;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 public class Rule {
     private int groupId; //优惠分组的组别
@@ -14,6 +15,8 @@ public class Rule {
     private double profit; //优惠 打8折就是0.8 送1杯就是1
     private ArrayList<Drinks> freeDrinks; //如果送饮料，送的类型 不送的优惠为null
     private boolean canAdd;//是否支持累加
+    private Date from;
+    private Date to;
     public Rule(int groupId,int scope,int profitType,int condition,int discountRange,double profit,boolean canAdd,ArrayList<Drinks> oriented,ArrayList<Drinks> freeDrinks) {
         this.groupId = groupId;
         this.scope = scope;
@@ -24,6 +27,7 @@ public class Rule {
         this.canAdd = canAdd;
         this.oriented = oriented;
         this.freeDrinks = freeDrinks;
+
     }
 
     public int getGroupId() {

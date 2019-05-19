@@ -23,7 +23,7 @@ public class DrinkUtil {
                 return new CappuccinoRepositoryImpl().getCappuccino(name);
             case "espresso":
                 return new EspressoRepositoryImpl().getEspresso(name);
-            case "greenTea":
+            case "=-greenTea":
                 return new GreenTeaRepositoryImpl().getGreenTea(name);
             case "redTea":
                 return new RedTeaRepositoryImpl().getRedTea(name);
