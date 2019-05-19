@@ -7,6 +7,7 @@ public class FileConstant {
     public static final String REDTEA_CSV = "data/redTea.csv";
     public static final String GREENTEA_CSV = "data/greenTea.csv";
     public static final String INGREDIENT_CSV = "data/ingredient.csv";
+    public static final String DRINKS_CSV = "data/drinks.csv";
     public static final char CSV_SEPARATOR = ',';
     public static final String CHARSET = "UTF-8";
 }

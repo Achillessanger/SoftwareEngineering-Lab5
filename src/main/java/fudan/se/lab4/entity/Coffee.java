@@ -4,8 +4,15 @@ import fudan.se.lab4.constant.InfoConstant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.List;
+
 public abstract class Coffee extends Drinks {
 
+    private String name;
+    private String description;
+    private double price;
+    private int size;
+    private List<Double> costOfSize;
     private static Logger logger = LoggerFactory.getLogger(Coffee.class);
 
     public void setDescription(String description) {
@@ -37,7 +44,7 @@ public abstract class Coffee extends Drinks {
         this.price = price;
     }
 
-    double priceOfSize() {
+    public double priceOfSize() {
         //big-size3-$6 middle-size2-$4 small-size1-$2
         if (getSize() <= 0 || getSize() >= 4) {
             logger.info(InfoConstant.INVALID_SIZE);

@@ -40,10 +40,10 @@ public class PromotionServiceImpl implements PromotionService {
         oriented3.add(orient4);
 
 
-        rules.add(new Rule(1,0,2,2,2,0.8,true,oriented1,null));
-        rules.add(new Rule(1,0,1,3,3,1,true,oriented2,null));
-        rules.add(new Rule(1,0,2,2,1,0.5,true,oriented3,null));
-        rules.add(new Rule(2,0,0,100,100,30,true,null,null));
+//        rules.add(new Rule(1,0,2,2,2,0.8,true,oriented1,null));
+//        rules.add(new Rule(1,0,1,3,3,1,true,oriented2,null));
+//        rules.add(new Rule(1,0,2,2,1,0.5,true,oriented3,null));
+//        rules.add(new Rule(2,0,0,100,100,30,true,null,null));
 
         return rules;
     }

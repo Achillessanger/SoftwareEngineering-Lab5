@@ -4,9 +4,16 @@ import fudan.se.lab4.constant.InfoConstant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.List;
+
 public abstract class Tea extends Drinks {
     private static Logger logger = LoggerFactory.getLogger(Tea.class);
 
+    private String name;
+    private String description;
+    private double price;
+    private int size;
+    private List<Double> costOfSize;
     public void setDescription(String description) {
         if (!"".equals(description)) {
             this.description = description;
@@ -40,7 +47,7 @@ public abstract class Tea extends Drinks {
 
     public abstract double cost();
 
-    double priceOfSize() {
+    public double priceOfSize() {
         switch (getSize()){
             case 1: return 2;
             case 2: return 4;

@@ -4,30 +4,88 @@ import fudan.se.lab4.entity.Drinks;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 public class Rule {
     private int groupId; //优惠分组的组别
     private int scope;  //资格范围，为0代表无限制，所有客户全都可以享受，这一部分可以进一步扩展成资格类型和资格配置
-    private ArrayList<Drinks> oriented; //对象范围，此类优惠规则针对某类对象，这部分可以扩展为对象范围和对象配置，如只有大杯型的卡布奇诺买几送几等，全场优惠为null
     private int profitType; //利益类型,0是满减，1是满赠，2是打折
-    private int condition; //优惠中需要满足的额度，如满200减10中额度为200
-    private int discountRange; //参与优惠的范围
     private double profit; //优惠 打8折就是0.8 送1杯就是1
-    private ArrayList<Drinks> freeDrinks; //如果送饮料，送的类型 不送的优惠为null
     private boolean canAdd;//是否支持累加
     private Date from;
     private Date to;
-    public Rule(int groupId,int scope,int profitType,int condition,int discountRange,double profit,boolean canAdd,ArrayList<Drinks> oriented,ArrayList<Drinks> freeDrinks) {
+    class Require{
+        private int requiretType;//0价格 1杯数
+        private double number;
+        private List<Drinks> drinksList;
+        public Require(int requiretType,double number,List<Drinks> drinksList) {
+            this.requiretType=requiretType;
+            this.number=number;
+            this.drinksList=drinksList;
+        }
+
+        public int getRequiretType() {
+            return requiretType;
+        }
+
+        public double getNumber() {
+            return number;
+        }
+
+        public List<Drinks> getDrinksList() {
+            return drinksList;
+        }
+
+        public void setDrinksList(List<Drinks> drinksList) {
+            this.drinksList = drinksList;
+        }
+
+        public void setRequiretType(int requiretType) {
+            this.requiretType = requiretType;
+        }
+
+        public void setNumber(double number) {
+            this.number = number;
+        }
+    }//TODO 是优惠的判断生效条件
+    class ProcessObject{
+        private int requiretType;//0价格 1杯数
+        private double number;
+        private List<Drinks> drinksList;
+        public ProcessObject(int requiretType,double number,List<Drinks> drinksList) {
+            this.requiretType=requiretType;
+            this.number=number;
+            this.drinksList=drinksList;
+        }
+    }//TODO 没写完 是优惠的对象
+    class Send{
+        private int requiretType;//0价格 1杯数
+        private double number;
+        private List<Drinks> drinksList;
+        public Send(int requiretType,double number,List<Drinks> drinksList) {
+            this.requiretType=requiretType;
+            this.number=number;
+            this.drinksList=drinksList;
+        }
+    }//TODO 没写完 是赠送的东西
+    private List<ProcessObject> discountRange;
+    private List<Require> orderCondition;
+    private List<Send> freeDrinks; //如果送饮料，送的类型/数量 不送的优惠为null
+
+
+
+    public Rule(int groupId,int scope,int profitType,double profit,List<Send> freeDrinks,boolean canAdd, Date from, Date to, List<ProcessObject> discountRange, List<Require> orderCondition) {
         this.groupId = groupId;
         this.scope = scope;
         this.profitType = profitType;
-        this.condition = condition;
-        this.discountRange = discountRange;
         this.profit = profit;
-        this.canAdd = canAdd;
-        this.oriented = oriented;
         this.freeDrinks = freeDrinks;
-
+//        this.canAdd = canAdd;
+        this.from = from;
+        this.to = to;
+        this.discountRange = discountRange;
+        this.orderCondition = orderCondition;
     }
 
     public int getGroupId() {
@@ -38,31 +96,35 @@ public class Rule {
         return scope;
     }
 
-    public ArrayList<Drinks> getOriented() {
-        return oriented;
-    }
-
     public int getProfitType() {
         return profitType;
-    }
-
-    public int getCondition() {
-        return condition;
-    }
-
-    public int getDiscountRange() {
-        return discountRange;
     }
 
     public double getProfit() {
         return profit;
     }
 
-    public boolean isCanAdd() {
-        return canAdd;
+    public List<Send> getFreeDrinks() {
+        return freeDrinks;
     }
 
-    public ArrayList<Drinks> getFreeDrinks() {
-        return freeDrinks;
+//    public boolean isCanAdd() {
+//        return canAdd;
+//    }
+
+    public Date getFrom() {
+        return from;
+    }
+
+    public Date getTo() {
+        return to;
+    }
+
+    public List<ProcessObject> getDiscountRange() {
+        return discountRange;
+    }
+
+    public List<Require> getOrderCondition() {
+        return orderCondition;
     }
 }

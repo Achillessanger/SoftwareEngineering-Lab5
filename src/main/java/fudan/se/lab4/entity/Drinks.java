@@ -1,10 +1,13 @@
 package fudan.se.lab4.entity;
 
-public abstract class Drinks {
-    protected String name;
-    protected String description;
-    protected double price;
-    protected int size;
+import java.util.List;
+
+public class Drinks {
+    private String name;
+    private String description;
+    private double price;
+    private int size;
+    private List<Double> costOfSize;
 
 
 
@@ -19,6 +22,9 @@ public abstract class Drinks {
     }
     public double getPrice() {
         return price;
+    }
+    public List<Double> getCostOfSize() {
+        return costOfSize;
     }
 
     public void setSize(int size) {
@@ -35,7 +41,15 @@ public abstract class Drinks {
     }
     public void setSizeInSaleRule(int size){
         this.size = size;
-    }//允许size为0
+    }
+    public void setCostOfSize(List<Double> costOfSize) {
+        this.costOfSize = costOfSize;
+    }
+    public double cost() {
+        return priceOfSize() + getPrice();
+    }
+    public double priceOfSize() {
+        return costOfSize.get(this.size-1);
+    }
 
-    public abstract double cost();
 }
