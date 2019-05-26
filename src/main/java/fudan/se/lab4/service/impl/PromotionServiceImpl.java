@@ -51,7 +51,7 @@ public class PromotionServiceImpl implements PromotionService {
 
     @Override
     public PromotionResult chooseRules(Order order, double purePrice) {
-        class DiscountAndPromotion{
+            class DiscountAndPromotion{
             double totalDiscount;
             List<String> totalDes = new ArrayList<>();
             DiscountAndPromotion(Double d){
