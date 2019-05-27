@@ -23,6 +23,8 @@ public class RuleServiceImpl implements RuleService {
                 Class clazz = Class.forName("fudan.se.lab4.service.strategy.impl.ProfitStrategyImplType" + rule.getProfitType());
                 ProfitStrategy profitStrategy = (ProfitStrategy) clazz.newInstance();
                 return profitStrategy.profitProcess(ruleContext, rule, isValid);
+            }else {
+                return new RuleResult(rule,0,"");
             }
 
         } catch (Exception e) {

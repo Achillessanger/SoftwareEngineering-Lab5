@@ -1,14 +1,16 @@
 package fudan.se.lab4.repository.impl;
 
 import fudan.se.lab4.constant.FileConstant;
-import fudan.se.lab4.constant.InfoConstant;
 import fudan.se.lab4.entity.Cappuccino;
 import fudan.se.lab4.repository.CappuccinoRepository;
+import fudan.se.lab4.service.LoggerService;
+import fudan.se.lab4.service.impl.LoggerServiceImpl;
 import fudan.se.lab4.util.FileUtil;
 
 import java.text.MessageFormat;
 
 public class CappuccinoRepositoryImpl implements CappuccinoRepository {
+    private LoggerService loggerService = new LoggerServiceImpl();
     @Override
     public Cappuccino getCappuccino(String name) {
         return stringArrayToObject(FileUtil.readByName(name, FileConstant.CAPPUCCINO_CSV));
@@ -22,7 +24,7 @@ public class CappuccinoRepositoryImpl implements CappuccinoRepository {
     private String[] objectToStringArray(Cappuccino cappuccino) {
         // if user already exists, throw exception
         if (FileUtil.exist(cappuccino.getName(), FileConstant.CAPPUCCINO_CSV)) {
-            throw new RuntimeException(MessageFormat.format(InfoConstant.ENTITY_EXIST, "Coffee",
+            throw new RuntimeException(MessageFormat.format(loggerService.log("ENTITY_EXIST"), "Coffee",
                     cappuccino.getName()));
         }
         String[] array = new String[4];

@@ -1,25 +1,24 @@
 package fudan.se.lab4.repository.impl;
 
 import fudan.se.lab4.constant.FileConstant;
-import fudan.se.lab4.constant.InfoConstant;
 import fudan.se.lab4.context.EnvironmentContext;
-import fudan.se.lab4.entity.Cappuccino;
 import fudan.se.lab4.entity.Drinks;
-import fudan.se.lab4.entity.User;
 import fudan.se.lab4.repository.DrinkRepository;
+import fudan.se.lab4.service.LoggerService;
+import fudan.se.lab4.service.impl.LoggerServiceImpl;
 import fudan.se.lab4.util.FileUtil;
 
-import java.io.FileReader;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 
 public class DrinkRepositoryImpl implements DrinkRepository {
+    private LoggerService loggerService = new LoggerServiceImpl();
     public Drinks getDrink(String name){
         try {
            return stringArrayToObject(FileUtil.readByName(name, FileConstant.DRINKS_CSV));
         } catch (Exception e) {
-            if(e.getMessage().equals(MessageFormat.format(InfoConstant.ENTITY_NOT_FOUND,name))) {
+            if(e.getMessage().equals(MessageFormat.format(loggerService.log("ENTITY_NOT_FOUND"),name))) {
                 for(String[] sArr: EnvironmentContext.getEnvironmentContext().getSpecialDrinks()){
                     if(sArr[0].equals(name)){
                         return stringArrayToObject(sArr);

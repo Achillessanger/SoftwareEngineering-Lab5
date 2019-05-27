@@ -1,6 +1,5 @@
 package fudan.se.lab4.service.impl;
 
-import fudan.se.lab4.constant.InfoConstant;
 import fudan.se.lab4.entity.User;
 import fudan.se.lab4.repository.UserRepository;
 import fudan.se.lab4.repository.impl.UserRepositoryImpl;
@@ -23,7 +22,7 @@ public class AccountServiceImpl implements AccountService {
         hasLogin = false;
         //to check whether user is null
         if (user == null || user.getName() == null || user.getPassword() == null) {
-            throw new RuntimeException(InfoConstant.NULL_POINTER);
+            throw new RuntimeException(loggerService.log("FUNCTION_PARAMETER_POINTER_NULL"));
         }
 
         //check name and password
@@ -35,7 +34,7 @@ public class AccountServiceImpl implements AccountService {
 
             } else {
                 hasLogin = false;
-                throw new RuntimeException(InfoConstant.USER_NOT_FOUND);
+                throw new RuntimeException(loggerService.log("USER_NOT_FOUND"));
             }
         } catch (RuntimeException e) {
             logger.info(e.getMessage());
@@ -53,18 +52,18 @@ public class AccountServiceImpl implements AccountService {
 
         try {
             if(user == null || user.getName() == null || user.getPassword() == null){
-                throw new RuntimeException(InfoConstant.NULL_POINTER);
+                throw new RuntimeException(loggerService.log("FUNCTION_PARAMETER_POINTER_NULL"));
             }
             if (checkUserExisted(user.getName())) {
                 //account already exist
-                throw new RuntimeException(MessageFormat.format(InfoConstant.ENTITY_EXIST, "User", user.getName()));
+                throw new RuntimeException(MessageFormat.format(loggerService.log("ENTITY_EXIST"), "User", user.getName()));
             }else if (!checkName(user.getName())){
-                throw new RuntimeException(InfoConstant.INVALID_USERNAME);
+                throw new RuntimeException(loggerService.log("USERNAME_INVALID"));
             }else if (!checkPassword(user.getPassword())){
-                throw new RuntimeException(InfoConstant.INVALID_PASSWORD);
+                throw new RuntimeException(loggerService.log("PASSWORD_INVALID"));
             }else {
                 userRepository.createUser(user);
-                logger.info(MessageFormat.format(loggerService.log("SUCCESS_TO_SIGN_UP"), user.getName()));
+                logger.info(MessageFormat.format(loggerService.log("SIGN_UP_SUCCEED"), user.getName()));
                 return true;
             }
         } catch (RuntimeException e) {
@@ -76,9 +75,9 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public boolean checkStatus() {
         if (hasLogin) {
-            logger.info(InfoConstant.USER_LOGIN);
+            logger.info(loggerService.log("USER_LOGIN_ALREADY"));
         } else {
-            logger.info(InfoConstant.USER_NOT_LOGIN);
+            logger.info(loggerService.log("USER_NOT_LOGIN"));
         }
         return hasLogin;
     }
@@ -86,34 +85,34 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public boolean checkName(String name) {
         if (name == null) {
-            logger.info(InfoConstant.INVALID_USERNAME);
+            logger.info(loggerService.log("USERNAME_INVALID"));
             return false;
         }
         if("".equals(name)) {
-            logger.info(InfoConstant.INVALID_USERNAME);
+            logger.info(loggerService.log("USERNAME_INVALID"));
             return false;
         }
         if (!name.startsWith("starbb_")) {
-            logger.info(InfoConstant.INVALID_USERNAME);
+            logger.info(loggerService.log("USERNAME_INVALID"));
             return false;
         }
         boolean isValid = name.matches("[0-9A-Za-z_]*");
         if (!isValid) {
-            logger.info(InfoConstant.INVALID_USERNAME);
+            logger.info(loggerService.log("USERNAME_INVALID"));
             return false;
         }
         if (name.length() < 8 || name.length() >= 50) {
-            logger.info(InfoConstant.INVALID_USERNAME);
+            logger.info(loggerService.log("USERNAME_INVALID"));
             return false;
         }
-        logger.info(MessageFormat.format(InfoConstant.USERNAME_VALID, name));
+        logger.info(MessageFormat.format(loggerService.log("USERNAME_VALID"), name));
         return true;
     }
 
 
     private boolean checkUserExisted(String userName) {
         if(userName==null) {
-            throw new RuntimeException(InfoConstant.NULL_POINTER);
+            throw new RuntimeException(loggerService.log("FUNCTION_PARAMETER_POINTER_NULL"));
         }
         boolean isExisted = false;
         try {
@@ -127,39 +126,39 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public boolean checkPassword(String password) {
         if(password == null){
-            logger.info(InfoConstant.INVALID_PASSWORD);
+            logger.info(loggerService.log("PASSWORD_INVALID"));
             return false;
         }
         if("".equals(password)) {
-            logger.info(InfoConstant.INVALID_PASSWORD);
+            logger.info(loggerService.log("PASSWORD_INVALID"));
         }
         if(!(password.matches(".*[A-Za-z]+.*") && password.matches(".*[0-9]+.*") && password.matches(".*[_]+.*"))){
-            logger.info(InfoConstant.INVALID_PASSWORD);
+            logger.info(loggerService.log("PASSWORD_INVALID"));
             return false;
         }
         if(password.matches(".*[^0-9A-Za-z_].*")){
-            logger.info(InfoConstant.INVALID_PASSWORD);
+            logger.info(loggerService.log("PASSWORD_INVALID"));
             return false;
         }
         if(password.length() < 8 || password.length() >= 100){
-            logger.info(InfoConstant.INVALID_PASSWORD);
+            logger.info(loggerService.log("PASSWORD_INVALID"));
             return false;
         }
-        logger.info(MessageFormat.format(InfoConstant.PASSWORD_VALID, password));
+        logger.info(MessageFormat.format(loggerService.log("PASSWORD_VALID"), password));
         return true;
     }
 
     private boolean checkUserInfoMatch(User user) {
         if(user==null) {
-            throw new RuntimeException(InfoConstant.NULL_POINTER);
+            throw new RuntimeException(loggerService.log("FUNCTION_PARAMETER_POINTER_NULL"));
         }
         User userOfCsv = userRepository.getUser(user.getName());
         hasLogin = user.getPassword().equals(userOfCsv.getPassword());
         if (hasLogin) {
-            logger.info(MessageFormat.format(InfoConstant.SUCCESS_TO_LOGIN, user.getName()));
+            logger.info(MessageFormat.format(loggerService.log("SIGN_UP_SUCCEED"), user.getName()));
             return true;
         } else {
-            throw new RuntimeException(InfoConstant.WRONG_MATCH);
+            throw new RuntimeException(loggerService.log("USERNAME_OR_PASSWORD_WRONG"));
         }
     }
 }

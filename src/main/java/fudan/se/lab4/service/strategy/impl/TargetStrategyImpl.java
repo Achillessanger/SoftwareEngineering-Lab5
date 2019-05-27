@@ -8,6 +8,7 @@ import fudan.se.lab4.entity.Drinks;
 import fudan.se.lab4.repository.DrinkRepository;
 import fudan.se.lab4.repository.impl.DrinkRepositoryImpl;
 import fudan.se.lab4.repository.impl.RuleRepositoryImpl;
+import fudan.se.lab4.service.LoggerService;
 import fudan.se.lab4.service.impl.LoggerServiceImpl;
 import fudan.se.lab4.service.impl.OrderServiceImpl;
 import fudan.se.lab4.service.strategy.TargetStrategy;
@@ -19,6 +20,7 @@ import java.util.List;
 
 public class TargetStrategyImpl implements TargetStrategy {
     private static Logger logger = LoggerFactory.getLogger(OrderServiceImpl.class);
+    private LoggerService loggerService = new LoggerServiceImpl();
     private DrinkRepository drinkRepository = new DrinkRepositoryImpl();
 
     public int isValid(RuleContext ruleContext, Rule rule) {
@@ -46,7 +48,7 @@ public class TargetStrategyImpl implements TargetStrategy {
                         break;
                     default:
                         //todo
-                        logger.info(new LoggerServiceImpl().log(""));
+                        logger.info(loggerService.log("PROMOTION_TYPE_NOT_EXISTED"));
                         break;
                 }
                 if (result == -1)

@@ -3,7 +3,8 @@ package fudan.se.lab4.util;
 import com.csvreader.CsvReader;
 import com.csvreader.CsvWriter;
 import fudan.se.lab4.constant.FileConstant;
-import fudan.se.lab4.constant.InfoConstant;
+import fudan.se.lab4.service.LoggerService;
+import fudan.se.lab4.service.impl.LoggerServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,6 +17,7 @@ import java.text.MessageFormat;
 
 public class FileUtil {
     private static Logger logger = LoggerFactory.getLogger(FileUtil.class);
+    private static LoggerService loggerService = new LoggerServiceImpl();
 
     private static boolean createFile(String destFileName) {
         File file = new File(destFileName);
@@ -23,27 +25,27 @@ public class FileUtil {
             return true;
         } else {
             if (destFileName.endsWith(File.separator)) {
-                throw new RuntimeException(MessageFormat.format(InfoConstant.FILE_CANNOT_BE_DIR, destFileName));
+                throw new RuntimeException(MessageFormat.format(loggerService.log("FILE_NAME_INVAILD_FAILED_CREATED"), destFileName));
             }
             // file exists?
             if (!file.getParentFile().exists()) {
                 //if the parent dir is not exist, then create it.
-                logger.info(InfoConstant.CREATING_PARENT_DIR);
+                logger.info(loggerService.log("PARENT_DIR_CREATING"));
                 if (!file.getParentFile().mkdirs()) {
-                    throw new RuntimeException(InfoConstant.FAILED_CREAT_DIR);
+                    throw new RuntimeException(loggerService.log("DIR_FAILED_CREATE"));
                 }
             }
             // create target file.
             try {
                 if (file.createNewFile()) {
-                    logger.info(InfoConstant.SUCCESS_TO_CREATE_FILE, destFileName);
+                    logger.info(loggerService.log("FILE_SUCCEED_CREATE"), destFileName);
                     return true;
                 } else {
-                    throw new RuntimeException(MessageFormat.format(InfoConstant.FAILED_TO_CREATE_FILE, destFileName));
+                    throw new RuntimeException(MessageFormat.format(loggerService.log("FILE_FAILED_CREATE"), destFileName));
                 }
             } catch (IOException e) {
                 logger.info(e.getMessage());
-                throw new RuntimeException(MessageFormat.format(InfoConstant.FAILED_TO_CREATE_FILE_REASON, destFileName,
+                throw new RuntimeException(MessageFormat.format(loggerService.log("FILE_FAILED_CREATE_REASON"), destFileName,
                         e.getMessage()));
             }
         }
@@ -83,8 +85,8 @@ public class FileUtil {
             throw new RuntimeException(e.getMessage());
         }
 
-        logger.info(MessageFormat.format(InfoConstant.ENTITY_NOT_FOUND, Name));
-        throw new RuntimeException(MessageFormat.format(InfoConstant.ENTITY_NOT_FOUND, Name));
+        logger.info(MessageFormat.format(loggerService.log("ENTITY_NOT_FOUND"), Name));
+        throw new RuntimeException(MessageFormat.format(loggerService.log("ENTITY_NOT_FOUND"), Name));
     }
 
     public static boolean exist(String name, String dataFilePath) {

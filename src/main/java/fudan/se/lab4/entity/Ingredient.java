@@ -1,6 +1,7 @@
 package fudan.se.lab4.entity;
 
-import fudan.se.lab4.constant.InfoConstant;
+import fudan.se.lab4.service.LoggerService;
+import fudan.se.lab4.service.impl.LoggerServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -10,7 +11,7 @@ public class Ingredient{
         private double price;
 //        private int size;
         private static Logger logger = LoggerFactory.getLogger(Coffee.class);
-
+    private LoggerService loggerService = new LoggerServiceImpl();
         public String getDescription() {
             return description;
         }
@@ -72,7 +73,7 @@ public class Ingredient{
 //        }
 
         private void failToCreate() {
-            logger.info(InfoConstant.CREATE_INGREDIENT_FAILED);
-            throw new RuntimeException(InfoConstant.CREATE_INGREDIENT_FAILED);
+            logger.info(loggerService.log("INGREDIENT_FAILED_CREATE"));
+            throw new RuntimeException(loggerService.log("INGREDIENT_FAILED_CREATE"));
         }
 }

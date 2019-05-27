@@ -1,12 +1,10 @@
 package fudan.se.lab4;
 
-import fudan.se.lab4.constant.InfoConstant;
 import fudan.se.lab4.dto.Ingredient;
 import fudan.se.lab4.dto.Order;
 import fudan.se.lab4.dto.OrderItem;
 import fudan.se.lab4.dto.PaymentInfo;
 import fudan.se.lab4.service.impl.OrderServiceImpl;
-import fudan.se.lab4.service.strategy.impl.ProfitStrategyImplType2;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;

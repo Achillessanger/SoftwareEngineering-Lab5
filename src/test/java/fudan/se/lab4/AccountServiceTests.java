@@ -1,6 +1,5 @@
 package fudan.se.lab4;
 
-import fudan.se.lab4.constant.InfoConstant;
 import fudan.se.lab4.entity.User;
 import fudan.se.lab4.repository.UserRepository;
 import fudan.se.lab4.service.impl.AccountServiceImpl;

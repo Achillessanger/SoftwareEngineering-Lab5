@@ -1,14 +1,16 @@
 package fudan.se.lab4.repository.impl;
 
 import fudan.se.lab4.constant.FileConstant;
-import fudan.se.lab4.constant.InfoConstant;
 import fudan.se.lab4.entity.Espresso;
 import fudan.se.lab4.repository.EspressoRepository;
+import fudan.se.lab4.service.LoggerService;
+import fudan.se.lab4.service.impl.LoggerServiceImpl;
 import fudan.se.lab4.util.FileUtil;
 
 import java.text.MessageFormat;
 
 public class EspressoRepositoryImpl implements EspressoRepository {
+    private LoggerService loggerService = new LoggerServiceImpl();
     @Override
     public Espresso getEspresso(String name) {
         return stringArrayToObject(FileUtil.readByName(name, FileConstant.ESPRESSO_CSV));
@@ -22,7 +24,7 @@ public class EspressoRepositoryImpl implements EspressoRepository {
     private String[] objectToStringArray(Espresso espresso) {
         // if user already exists, throw exception
         if (FileUtil.exist(espresso.getName(), FileConstant.ESPRESSO_CSV)) {
-            throw new RuntimeException(MessageFormat.format(InfoConstant.ENTITY_EXIST, "Coffee",
+            throw new RuntimeException(MessageFormat.format(loggerService.log("ENTITY_EXIST"), "Coffee",
                     espresso.getName()));
         }
         String[] array = new String[4];

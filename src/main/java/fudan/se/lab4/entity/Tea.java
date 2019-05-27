@@ -1,6 +1,7 @@
 package fudan.se.lab4.entity;
 
-import fudan.se.lab4.constant.InfoConstant;
+import fudan.se.lab4.service.LoggerService;
+import fudan.se.lab4.service.impl.LoggerServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -8,7 +9,7 @@ import java.util.List;
 
 public abstract class Tea extends Drinks {
     private static Logger logger = LoggerFactory.getLogger(Tea.class);
-
+    private LoggerService loggerService = new LoggerServiceImpl();
     private String name;
     private String description;
     private double price;
@@ -27,8 +28,8 @@ public abstract class Tea extends Drinks {
         if (size >= 1 && size <= 3) {
             this.size = size;
         } else {
-            logger.info(InfoConstant.INVALID_SIZE);
-            throw new RuntimeException(InfoConstant.INVALID_SIZE);
+            logger.info(loggerService.log("SIZE_INVALID"));
+            throw new RuntimeException(loggerService.log("SIZE_INVALID"));
         }
     }
 
@@ -53,14 +54,14 @@ public abstract class Tea extends Drinks {
             case 2: return 4;
             case 3: return 5;
             default:{
-                logger.info(InfoConstant.INVALID_SIZE);
-                throw new RuntimeException(InfoConstant.INVALID_SIZE);
+                logger.info(loggerService.log("SIZE_INVALID"));
+                throw new RuntimeException(loggerService.log("SIZE_INVALID"));
             }
         }
     }
 
     private void failToCreate() {
-        logger.info(InfoConstant.CREATE_TEA_FAILED);
-        throw new RuntimeException(InfoConstant.CREATE_TEA_FAILED);
+        logger.info(loggerService.log("TEA_FAILED_CREATE"));
+        throw new RuntimeException(loggerService.log("TEA_FAILED_CREATE"));
     }
 }

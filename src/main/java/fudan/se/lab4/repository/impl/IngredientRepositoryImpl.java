@@ -1,15 +1,17 @@
 package fudan.se.lab4.repository.impl;
 
 import fudan.se.lab4.constant.FileConstant;
-import fudan.se.lab4.constant.InfoConstant;
 
 import fudan.se.lab4.entity.Ingredient;
 import fudan.se.lab4.repository.IngredientRepository;
+import fudan.se.lab4.service.LoggerService;
+import fudan.se.lab4.service.impl.LoggerServiceImpl;
 import fudan.se.lab4.util.FileUtil;
 
 import java.text.MessageFormat;
 
 public class IngredientRepositoryImpl implements IngredientRepository {
+    private LoggerService loggerService = new LoggerServiceImpl();
     @Override
     public Ingredient getIngredient(String name) {
         return stringArrayToObject(FileUtil.readByName(name, FileConstant.INGREDIENT_CSV));
@@ -23,7 +25,7 @@ public class IngredientRepositoryImpl implements IngredientRepository {
     private String[] objectToStringArray(Ingredient ingredient) {
         // if user already exists, throw exception
         if (FileUtil.exist(ingredient.getName(), FileConstant.INGREDIENT_CSV)) {
-            throw new RuntimeException(MessageFormat.format(InfoConstant.ENTITY_EXIST, "Ingredient",
+            throw new RuntimeException(MessageFormat.format(loggerService.log("ENTITY_EXIST"), "Ingredient",
                     ingredient.getName()));
         }
         String[] array = new String[3];

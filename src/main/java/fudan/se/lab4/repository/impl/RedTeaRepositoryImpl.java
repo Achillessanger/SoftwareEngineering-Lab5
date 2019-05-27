@@ -1,14 +1,16 @@
 package fudan.se.lab4.repository.impl;
 
 import fudan.se.lab4.constant.FileConstant;
-import fudan.se.lab4.constant.InfoConstant;
 import fudan.se.lab4.entity.RedTea;
 import fudan.se.lab4.repository.RedTeaRepository;
+import fudan.se.lab4.service.LoggerService;
+import fudan.se.lab4.service.impl.LoggerServiceImpl;
 import fudan.se.lab4.util.FileUtil;
 
 import java.text.MessageFormat;
 
 public class RedTeaRepositoryImpl implements RedTeaRepository {
+    private LoggerService loggerService = new LoggerServiceImpl();
     @Override
     public RedTea getRedTea(String name) {
         return stringArrayToObject(FileUtil.readByName(name, FileConstant.REDTEA_CSV));
@@ -22,7 +24,7 @@ public class RedTeaRepositoryImpl implements RedTeaRepository {
     private String[] objectToStringArray(RedTea redTea) {
         // if user already exists, throw exception
         if (FileUtil.exist(redTea.getName(), FileConstant.REDTEA_CSV)) {
-            throw new RuntimeException(MessageFormat.format(InfoConstant.ENTITY_EXIST, "Tea",
+            throw new RuntimeException(MessageFormat.format(loggerService.log("ENTITY_EXIST"), "Tea",
                     redTea.getName()));
         }
         String[] array = new String[4];
