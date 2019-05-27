@@ -4,6 +4,8 @@ import fudan.se.lab4.dto.Ingredient;
 import fudan.se.lab4.dto.Order;
 import fudan.se.lab4.dto.OrderItem;
 import fudan.se.lab4.dto.PaymentInfo;
+import fudan.se.lab4.service.LoggerService;
+import fudan.se.lab4.service.impl.LoggerServiceImpl;
 import fudan.se.lab4.service.impl.OrderServiceImpl;
 import org.junit.After;
 import org.junit.Before;
@@ -25,6 +27,7 @@ public class OrderServiceTests {
     private OrderServiceImpl orderService;
     private PaymentInfo paymentInfo;
     private List<String> EMPTYMSGS = new ArrayList<>();
+    private LoggerService loggerService = new LoggerServiceImpl();
 
     @Rule
     public ExpectedException thrown = ExpectedException.none();
@@ -45,7 +48,7 @@ public class OrderServiceTests {
     @Test
     public void testOrderNull() {
         thrown.expect(RuntimeException.class);
-        thrown.expectMessage(InfoConstant.ORDER_WRONG);
+        thrown.expectMessage(loggerService.log("ORDER_WRONG"));
         orderService.pay(null);
     }
 
@@ -61,7 +64,7 @@ public class OrderServiceTests {
     public void testOrderItemNull() {
         //test OrderItem null
         thrown.expect(RuntimeException.class);
-        thrown.expectMessage(InfoConstant.ORDER_WRONG);
+        thrown.expectMessage(loggerService.log("ORDER_WRONG"));
         orderService.pay(new Order("nullOrderItem", null));
     }
 
@@ -70,7 +73,7 @@ public class OrderServiceTests {
     public void testOderItemEmpty() {
         List<OrderItem> orderItems = new ArrayList<>();
         thrown.expect(RuntimeException.class);
-        thrown.expectMessage(InfoConstant.ORDER_WRONG);
+        thrown.expectMessage(loggerService.log("ORDER_WRONG"));
         paymentInfo = orderService.pay(new Order("0", orderItems));
     }
 
@@ -96,7 +99,7 @@ public class OrderServiceTests {
     public void testDrinkNameNull() {
         List<OrderItem> orderItems = new ArrayList<>();
         thrown.expect(RuntimeException.class);
-        thrown.expectMessage(InfoConstant.FAILED_GET_DRINK);
+        thrown.expectMessage(loggerService.log("FAILED_GET_DRINK"));
         orderItems.add(new OrderItem(null, new ArrayList<>(), 1));
         orderService.pay(new Order("nullDrinkName", orderItems));
     }
@@ -106,7 +109,7 @@ public class OrderServiceTests {
     public void testDrinkNameError() {
         List<OrderItem> orderItems = new ArrayList<>();
         thrown.expect(RuntimeException.class);
-        thrown.expectMessage(InfoConstant.FAILED_GET_DRINK);
+        thrown.expectMessage(loggerService.log("FAILED_GET_DRINK"));
         orderItems.add(new OrderItem("error", new ArrayList<>(), 1));
         orderService.pay(new Order("errorName", orderItems));
     }
@@ -170,7 +173,7 @@ public class OrderServiceTests {
     public void testOrderItemSizeSmall() {
         List<OrderItem> orderItems = new ArrayList<>();
         thrown.expect(RuntimeException.class);
-        thrown.expectMessage(InfoConstant.INVALID_SIZE);
+        thrown.expectMessage(loggerService.log("INVALID_SIZE"));
         orderItems.add(new OrderItem("espresso", new ArrayList<>(), Integer.MIN_VALUE));
         orderService.pay(new Order("smallSize", orderItems));
     }
@@ -179,7 +182,7 @@ public class OrderServiceTests {
     public void testOrderItemSizeLarge() {
         List<OrderItem> orderItems = new ArrayList<>();
         thrown.expect(RuntimeException.class);
-        thrown.expectMessage(InfoConstant.INVALID_SIZE);
+        thrown.expectMessage(loggerService.log("INVALID_SIZE"));
         orderItems.add(new OrderItem("espresso", new ArrayList<>(), Integer.MAX_VALUE));
         orderService.pay(new Order("largeSize", orderItems));
     }
@@ -235,7 +238,7 @@ public class OrderServiceTests {
     public void testOrderIngredientNull() {
         List<OrderItem> orderItems = new ArrayList<>();
         thrown.expect(RuntimeException.class);
-        thrown.expectMessage(InfoConstant.INVALID_INGREDIENT);
+        thrown.expectMessage(loggerService.log("INVALID_INGREDIENT"));
         orderItems.add(new OrderItem("espresso", null, 1));
         orderService.pay(new Order("nullIngredient", orderItems));
     }
@@ -279,7 +282,7 @@ public class OrderServiceTests {
         List<OrderItem> orderItems = new ArrayList<>();
         List<Ingredient> ingredients = new ArrayList<>();
         thrown.expect(RuntimeException.class);
-        thrown.expectMessage(InfoConstant.INVALID_INGREDIENT);
+        thrown.expectMessage(loggerService.log("INVALID_INGREDIENT"));
         ingredients.add(new Ingredient(null, 1));
         orderItems.add(new OrderItem("espresso", ingredients, 1));
         orderService.pay(new Order("nullIngredientName", orderItems));
@@ -291,7 +294,7 @@ public class OrderServiceTests {
         List<OrderItem> orderItems = new ArrayList<>();
         List<Ingredient> ingredients = new ArrayList<>();
         thrown.expect(RuntimeException.class);
-        thrown.expectMessage(InfoConstant.INVALID_INGREDIENT);
+        thrown.expectMessage(loggerService.log("INVALID_INGREDIENT"));
         ingredients.add(new Ingredient("error", 1));
         orderItems.add(new OrderItem("espresso", ingredients, 1));
         orderService.pay(new Order("nullIngredientName", orderItems));
@@ -315,7 +318,7 @@ public class OrderServiceTests {
         List<Ingredient> ingredients = new ArrayList<>();
 
         thrown.expect(RuntimeException.class);
-        thrown.expectMessage(InfoConstant.INVALID_INGREDIENT);
+        thrown.expectMessage(loggerService.log("INVALID_INGREDIENT"));
         ingredients.add(new Ingredient("cream", -1));
         orderItems.add(new OrderItem("espresso", ingredients, 1));
         orderService.pay(new Order("1", orderItems));

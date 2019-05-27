@@ -2,17 +2,18 @@ package fudan.se.lab4.context;
 
 import fudan.se.lab4.currency.Currency;
 import fudan.se.lab4.entity.Drinks;
+import fudan.se.lab4.entity.Rule;
+import fudan.se.lab4.repository.RuleRepository;
+import fudan.se.lab4.repository.impl.RuleRepositoryImpl;
 
-import java.util.ArrayList;
-
-import java.util.Locale;
-import java.util.ResourceBundle;
+import java.util.*;
 
 public class EnvironmentContext {
     private ResourceBundle bundle=ResourceBundle.getBundle("starbb",new Locale("en","US"));
     private ArrayList<Currency> currencies=new ArrayList<>();
     private ArrayList<String[]> specialDrinks=new ArrayList<>();
     private static final EnvironmentContext environmentContext = new EnvironmentContext();
+    private List<Rule> rules;
     private EnvironmentContext(){
         String money=bundle.getString("CURRENCY");
         String[] curArray=money.split(";");
@@ -27,6 +28,8 @@ public class EnvironmentContext {
             specialDrinks.add(array);
         }
 
+        RuleRepository ruleRepository = new RuleRepositoryImpl();
+        this.rules = ruleRepository.getRulesFromCSV(bundle.getString("SALESRULES_CSV"));
     }
     public static EnvironmentContext getEnvironmentContext(){
         return environmentContext;
@@ -42,5 +45,9 @@ public class EnvironmentContext {
 
     public ArrayList<String[]> getSpecialDrinks() {
         return specialDrinks;
+    }
+
+    public List<Rule> getRules() {
+        return rules;
     }
 }
