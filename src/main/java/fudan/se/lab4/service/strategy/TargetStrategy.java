@@ -10,5 +10,5 @@ public interface TargetStrategy {
      * @param rule
      * @return 判断优惠条件是否生效
      */
-    boolean isValid(RuleContext ruleContext, Rule rule);
+    int isValid(RuleContext ruleContext, Rule rule);
 }
