@@ -85,7 +85,6 @@ public class AccountServiceTests {
                 will(returnValue(false));
 
                 allowing(userRepository).createUser(with(aNonNull(User.class)));
-
             }
         });
         accountService.setUserRepository(userRepository);
