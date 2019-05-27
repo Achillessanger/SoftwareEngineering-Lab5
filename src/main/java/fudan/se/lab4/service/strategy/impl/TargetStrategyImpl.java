@@ -7,6 +7,7 @@ import fudan.se.lab4.entity.Rule;
 import fudan.se.lab4.entity.Drinks;
 import fudan.se.lab4.repository.DrinkRepository;
 import fudan.se.lab4.repository.impl.DrinkRepositoryImpl;
+import fudan.se.lab4.repository.impl.RuleRepositoryImpl;
 import fudan.se.lab4.service.impl.LoggerServiceImpl;
 import fudan.se.lab4.service.impl.OrderServiceImpl;
 import fudan.se.lab4.service.strategy.TargetStrategy;
@@ -20,7 +21,7 @@ public class TargetStrategyImpl implements TargetStrategy {
     private static Logger logger = LoggerFactory.getLogger(OrderServiceImpl.class);
     private DrinkRepository drinkRepository = new DrinkRepositoryImpl();
 
-    public boolean isValid(RuleContext ruleContext, Rule rule) {
+    public int isValid(RuleContext ruleContext, Rule rule) {
         return isTimeValid(new Date(), rule.getFrom(), rule.getTo())
                 && isOrderConditionValid(ruleContext, rule.getOrderCondition());
     }
@@ -32,7 +33,7 @@ public class TargetStrategyImpl implements TargetStrategy {
         return true;
     }
 
-    private boolean isOrderConditionValid(RuleContext ruleContext, List<Rule.Require> orderCondition) {
+    private boolean isOrderConditionValid(RuleContext ruleContext, List<RuleRepositoryImpl.Item> orderCondition) {
         if (orderCondition != null) {
             for (Rule.Require require : orderCondition) {
                 switch (require.getRequiretType()) {
