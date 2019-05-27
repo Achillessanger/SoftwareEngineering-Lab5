@@ -4,5 +4,5 @@ import fudan.se.lab4.entity.Cappuccino;
 import fudan.se.lab4.entity.Drinks;
 
 public interface DrinkRepository {
-    Drinks getDrink(String name);
+     Drinks getDrink(String name);
 }

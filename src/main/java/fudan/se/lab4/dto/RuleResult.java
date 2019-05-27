@@ -1,5 +1,7 @@
 package fudan.se.lab4.dto;
 
+import fudan.se.lab4.entity.Rule;
+
 public class RuleResult {
     private Rule rule;
     private String ruleDescription;

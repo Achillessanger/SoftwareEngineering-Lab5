@@ -3,13 +3,13 @@ package fudan.se.lab4.service.strategy.impl;
 import fudan.se.lab4.context.RuleContext;
 import fudan.se.lab4.dto.Order;
 import fudan.se.lab4.dto.OrderItem;
-import fudan.se.lab4.dto.Rule;
+import fudan.se.lab4.entity.Rule;
 import fudan.se.lab4.dto.RuleResult;
 import fudan.se.lab4.entity.Drinks;
 import fudan.se.lab4.repository.DrinkRepository;
 import fudan.se.lab4.repository.impl.DrinkRepositoryImpl;
+import fudan.se.lab4.repository.impl.RuleRepositoryImpl;
 import fudan.se.lab4.service.strategy.ProfitStrategy;
-import fudan.se.lab4.util.DrinkUtil;
 
 import java.util.*;
 
@@ -25,7 +25,7 @@ public class ProfitStratrgyImplType1 implements ProfitStrategy {
         if (rule.getDiscountRange() == null || rule.getDiscountRange().size() == 0) {
             if (rule.getFreeDrinks() != null) {
                 //任选默认选最贵的，所以send里面只有一个饮品
-                for (Rule.Send send : rule.getFreeDrinks()) {
+                for (RuleRepositoryImpl.Item send : rule.getFreeDrinks()) {
                     sendDrinks.put(send.getDrinksList().get(0), (int) send.getNumber());
                     discount += send.getDrinksList().get(0).getPrice();
                 }
@@ -34,7 +34,7 @@ public class ProfitStratrgyImplType1 implements ProfitStrategy {
             }
         }
         //有条件的赠送
-        List<Rule.ProcessObject> discountRange = rule.getDiscountRange();
+        List<RuleRepositoryImpl.Item> discountRange = rule.getDiscountRange();
         int[] num = new int[discountRange.size()];
         //先记录订单中出现的所有茶的数量 区分size
         Map<Drinks, Integer> drinkNum = new HashMap<>();
@@ -52,7 +52,7 @@ public class ProfitStratrgyImplType1 implements ProfitStrategy {
 
         int max = Integer.MAX_VALUE;
         Map<Drinks, Integer> require = new HashMap<>();
-        for (Rule.ProcessObject processObject : discountRange) {
+        for (RuleRepositoryImpl.Item processObject : discountRange) {
             int index = discountRange.indexOf(processObject);
             for (Drinks drinks : processObject.getDrinksList()) {
                 num[index] += drinkNum.get(drinks);
