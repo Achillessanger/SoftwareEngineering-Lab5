@@ -22,50 +22,59 @@ public class TargetStrategyImpl implements TargetStrategy {
     private DrinkRepository drinkRepository = new DrinkRepositoryImpl();
 
     public int isValid(RuleContext ruleContext, Rule rule) {
-        return isTimeValid(new Date(), rule.getFrom(), rule.getTo())
-                && isOrderConditionValid(ruleContext, rule.getOrderCondition());
+        return min(isTimeValid(new Date(), rule.getFrom(), rule.getTo())
+                , isOrderConditionValid(ruleContext, rule.getOrderCondition(), rule.isCanAdd()));
     }
 
-    private boolean isTimeValid(Date current, Date from, Date to) {
+    private int isTimeValid(Date current, Date from, Date to) {
         if (from != null && to != null) {
-            return current == from || (current.after(from) && current.before(to));
+            return (current == from || (current.after(from) && current.before(to))) ? 1 : 0;
         }
-        return true;
+        return 1;
     }
 
-    private boolean isOrderConditionValid(RuleContext ruleContext, List<RuleRepositoryImpl.Item> orderCondition) {
+    private int isOrderConditionValid(RuleContext ruleContext, List<RuleRepositoryImpl.Item> orderCondition, Boolean canAdd) {
+        int result = Integer.MAX_VALUE;
         if (orderCondition != null) {
-            for (Rule.Require require : orderCondition) {
+            for (RuleRepositoryImpl.Item require : orderCondition) {
                 switch (require.getRequiretType()) {
                     case 0:
-                        if (!isPriceValid(ruleContext.getPurePrice(), require.getNumber())) {
-                            return false;
-                        }
+                        result = min(result, isPriceValid(ruleContext.getPurePrice(), require.getNumber(), require.getDrinksList()));
                         break;
                     case 1:
-                        if (!isDrinksNumValid(ruleContext.getOrder(), require.getDrinksList(), require.getNumber())) {
-                            return false;
-                        }
+                        result = min(result, isDrinksNumValid(ruleContext.getOrder(), require.getDrinksList(), require.getNumber(), canAdd));
                         break;
                     default:
                         //todo
                         logger.info(new LoggerServiceImpl().log(""));
                         break;
                 }
+                if (result == -1)
+                    return -1;
             }
         }
-        return true;
+        return result;
     }
 
-    private boolean isPriceValid(double purePrice, double priceCondition) {
-        return purePrice >= priceCondition;
+    private int isPriceValid(double purePrice, double priceCondition, List<Drinks> drinksList) {
+        //todo 价格对应为null
+        if (drinksList != null)
+            return -1;
+        return (purePrice >= priceCondition) ? 1 : -1;
     }
 
-    private boolean isDrinksNumValid(Order order, List<Drinks> drinksList, double number) {
+    private int isDrinksNumValid(Order order, List<Drinks> drinksList, double number, boolean canAdd) {
+        if (drinksList == null) {
+            return order.getOrderItems().size() / (int) number;
+        }
         int realNumber = 0;
         for (OrderItem orderItem : order.getOrderItems()) {
             realNumber += drinksList.contains(drinkRepository.getDrink(orderItem.getName())) ? 1 : 0;
         }
-        return realNumber >= number;
+        return canAdd ? realNumber / (int) number : 1;
+    }
+
+    private int min(int x, int y) {
+        return (x > y) ? y : x;
     }
 }
