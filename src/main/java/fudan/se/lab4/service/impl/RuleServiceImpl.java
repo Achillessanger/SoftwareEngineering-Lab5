@@ -5,6 +5,7 @@ import fudan.se.lab4.entity.Rule;
 import fudan.se.lab4.service.RuleService;
 import fudan.se.lab4.dto.RuleResult;
 import fudan.se.lab4.service.strategy.ProfitStrategy;
+import fudan.se.lab4.service.strategy.impl.TargetStrategyImpl;
 
 public class RuleServiceImpl implements RuleService {
     @Override
@@ -15,12 +16,16 @@ public class RuleServiceImpl implements RuleService {
         //profitType：0是满减，1是满赠，2是打折
         //TODO 先调用TargetStrategyImpl看是否满足优惠条件
         //TODO 用下面这个反射来调用对rule对象的处理！27行后switch后面的内容自己去掉
-        try{
-            System.out.println(this.getClass().getClassLoader().getResource("ProfitStrategyImplType2.class"));
-            Class clazz = Class.forName("fudan.se.lab4.service.strategy.impl.ProfitStrategyImplType"+rule.getProfitType());
-            ProfitStrategy profitStrategy =  (ProfitStrategy)clazz.newInstance();
-            return profitStrategy.profitProcess(ruleContext,rule);
-        }catch (Exception e){
+        try {
+            int isValid = new TargetStrategyImpl().isValid(ruleContext, rule);
+            if (isValid != -1) {
+                System.out.println(this.getClass().getClassLoader().getResource("ProfitStrategyImplType2.class"));
+                Class clazz = Class.forName("fudan.se.lab4.service.strategy.impl.ProfitStrategyImplType" + rule.getProfitType());
+                ProfitStrategy profitStrategy = (ProfitStrategy) clazz.newInstance();
+                return profitStrategy.profitProcess(ruleContext, rule, isValid);
+            }
+
+        } catch (Exception e) {
             throw new RuntimeException(e.getMessage());
         }
     }
