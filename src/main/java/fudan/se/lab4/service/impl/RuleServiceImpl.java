@@ -1,17 +1,10 @@
 package fudan.se.lab4.service.impl;
 
 import fudan.se.lab4.context.RuleContext;
-import fudan.se.lab4.dto.Order;
-import fudan.se.lab4.dto.OrderItem;
-import fudan.se.lab4.dto.Rule;
-import fudan.se.lab4.entity.Drinks;
+import fudan.se.lab4.entity.Rule;
 import fudan.se.lab4.service.RuleService;
 import fudan.se.lab4.dto.RuleResult;
 import fudan.se.lab4.service.strategy.ProfitStrategy;
-import fudan.se.lab4.util.DrinkUtil;
-
-
-import java.util.*;
 
 public class RuleServiceImpl implements RuleService {
     @Override
@@ -23,23 +16,13 @@ public class RuleServiceImpl implements RuleService {
         //TODO 先调用TargetStrategyImpl看是否满足优惠条件
         //TODO 用下面这个反射来调用对rule对象的处理！27行后switch后面的内容自己去掉
         try{
-            Class clazz = Class.forName("ProfitStrategyImplType"+rule.getProfitType());
-            ProfitStrategy profitStrategy =   (ProfitStrategy)clazz.newInstance();
-            profitStrategy.profitProcess(ruleContext,rule);
+            System.out.println(this.getClass().getClassLoader().getResource("ProfitStrategyImplType2.class"));
+            Class clazz = Class.forName("fudan.se.lab4.service.strategy.impl.ProfitStrategyImplType"+rule.getProfitType());
+            ProfitStrategy profitStrategy =  (ProfitStrategy)clazz.newInstance();
+            return profitStrategy.profitProcess(ruleContext,rule);
         }catch (Exception e){
-
+            throw new RuntimeException(e.getMessage());
         }
-
-
-        switch (rule.getProfitType()) {
-//            case 0:
-//                return discountType0(ruleContext, rule);
-//            case 1:
-//                return discountType1(ruleContext, rule);
-//            case 2:
-//                return discountType2(ruleContext, rule);
-        }
-        return null;
     }
 
     //TODO 参考下面这个来实现ProfitStrategyImplType0/1/2的函数，实现完了后需要删除这里下面的这些函数

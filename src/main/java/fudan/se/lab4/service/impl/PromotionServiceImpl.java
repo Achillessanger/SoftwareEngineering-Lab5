@@ -3,55 +3,30 @@ package fudan.se.lab4.service.impl;
 import fudan.se.lab4.context.RuleContext;
 import fudan.se.lab4.dto.Order;
 import fudan.se.lab4.dto.PromotionResult;
-import fudan.se.lab4.dto.Rule;
+import fudan.se.lab4.entity.Rule;
 import fudan.se.lab4.dto.RuleResult;
 import fudan.se.lab4.entity.*;
+import fudan.se.lab4.repository.RuleRepository;
+import fudan.se.lab4.repository.impl.RuleRepositoryImpl;
 import fudan.se.lab4.service.PromotionService;
 
 import java.util.*;
 
 public class PromotionServiceImpl implements PromotionService {
-    ArrayList<Rule> rules = initSaleRule();
+    List<Rule> rules;
 
     //本来应该从数据库的促销规则表中读取数据，因为本次lab不涉及数据库表设计，故在此写死，若要添加或修改促销规则，在此处修改一次即可
 
-    public ArrayList<Rule> initSaleRule(){
-        ArrayList<Rule> rules = new ArrayList<>();
-        //profitType：0是满减，1是满赠，2是打折
-        Drinks orient1 = new Espresso();
-        orient1.setName("espresso");
-        orient1.setSizeInSaleRule(3);
-        Drinks orient2 = new RedTea();
-        orient2.setName("redTea");
-        orient2.setSizeInSaleRule(0);
-        Drinks orient3 = new GreenTea();
-        orient3.setName("greenTea");
-        orient3.setSizeInSaleRule(0);
-        Drinks orient4 = new Cappuccino();
-        orient4.setName("cappuccino");
-        orient4.setSizeInSaleRule(0);
-
-        ArrayList<Drinks> oriented1 = new ArrayList<>();
-        oriented1.add(orient1);
-        ArrayList<Drinks> oriented2 = new ArrayList<>();
-        oriented2.add(orient2);
-        oriented2.add(orient3);
-        ArrayList<Drinks> oriented3 = new ArrayList<>();
-        oriented3.add(orient4);
-
-
-//        rules.add(new Rule(1,0,2,2,2,0.8,true,oriented1,null));
-//        rules.add(new Rule(1,0,1,3,3,1,true,oriented2,null));
-//        rules.add(new Rule(1,0,2,2,1,0.5,true,oriented3,null));
-//        rules.add(new Rule(2,0,0,100,100,30,true,null,null));
-
-        return rules;
+    public void initSaleRule(){
+        RuleRepository ruleRepository = new RuleRepositoryImpl();
+        rules = ruleRepository.getRulesFromCSV();
+//        return
     }
 
 
     @Override
     public PromotionResult chooseRules(Order order, double purePrice) {
-            class DiscountAndPromotion{
+        class DiscountAndPromotion{
             double totalDiscount;
             List<String> totalDes = new ArrayList<>();
             DiscountAndPromotion(Double d){

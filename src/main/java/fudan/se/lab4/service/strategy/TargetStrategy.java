@@ -1,7 +1,7 @@
 package fudan.se.lab4.service.strategy;
 
 import fudan.se.lab4.context.RuleContext;
-import fudan.se.lab4.dto.Rule;
+import fudan.se.lab4.entity.Rule;
 
 public interface TargetStrategy {
     /**

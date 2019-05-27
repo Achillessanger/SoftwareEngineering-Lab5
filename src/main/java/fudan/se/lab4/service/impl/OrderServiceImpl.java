@@ -3,7 +3,9 @@ package fudan.se.lab4.service.impl;
 import fudan.se.lab4.constant.InfoConstant;
 import fudan.se.lab4.dto.*;
 import fudan.se.lab4.entity.Drinks;
+import fudan.se.lab4.repository.impl.DrinkRepositoryImpl;
 import fudan.se.lab4.repository.impl.IngredientRepositoryImpl;
+import fudan.se.lab4.service.CalWholeDrinkService;
 import fudan.se.lab4.service.OrderService;
 import fudan.se.lab4.util.DrinkUtil;
 import org.slf4j.Logger;
@@ -15,6 +17,7 @@ import java.util.List;
 @Service
 public class OrderServiceImpl implements OrderService {
     private static Logger logger = LoggerFactory.getLogger(OrderServiceImpl.class);
+    private CalWholeDrinkService calWholeDrinkService = new CalWholeDrinkServiceImpl();
 
     @Override
     public PaymentInfo pay(Order order) {
@@ -40,19 +43,7 @@ public class OrderServiceImpl implements OrderService {
         DrinkUtil.isOrderValid(order);
         double totalPrice = 0.0;
         for (OrderItem orderItem : order.getOrderItems()) {
-            double price = 0.0;
-            Drinks drinks = DrinkUtil.getDrinks(orderItem.getName());
-            drinks.setSize(orderItem.getSize());
-            price += drinks.cost();
-            if(orderItem.getIngredients() ==null){
-                logger.info(InfoConstant.INVALID_INGREDIENT);
-                throw new RuntimeException(InfoConstant.INVALID_INGREDIENT);
-            }
-            for (Ingredient ingredient : orderItem.getIngredients()) {
-                DrinkUtil.isDrinkIngredientValid(ingredient);
-                price += new IngredientRepositoryImpl().getIngredient(ingredient.getName()).getPrice() * ingredient.getNumber();
-            }
-            totalPrice += price;
+            totalPrice += calWholeDrinkService.wholePrice(orderItem);
         }
         return totalPrice;
     }
