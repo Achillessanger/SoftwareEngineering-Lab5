@@ -136,9 +136,9 @@ public class Rule {
         return freeDrinks;
     }
 
-//    public boolean isCanAdd() {
-//        return canAdd;
-//    }
+    public boolean isCanAdd() {
+        return canAdd;
+    }
 
     public Date getFrom() {
         return from;
