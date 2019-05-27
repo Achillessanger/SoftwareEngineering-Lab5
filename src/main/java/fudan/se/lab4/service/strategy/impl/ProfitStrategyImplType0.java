@@ -7,7 +7,7 @@ import fudan.se.lab4.repository.impl.RuleRepositoryImpl;
 import fudan.se.lab4.service.strategy.ProfitStrategy;
 
 public class ProfitStrategyImplType0 implements ProfitStrategy {
-    public RuleResult profitProcess(RuleContext ruleContext, Rule rule) {
+    public RuleResult profitProcess(RuleContext ruleContext, Rule rule,int max) {
         //TODO 相当于原来的RuleServiceImpl.java里的private RuleResult discountType0(RuleContext ruleContext, Rule rule) 满减
 
         double discount = 0.0;

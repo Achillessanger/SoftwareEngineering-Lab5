@@ -5,6 +5,7 @@ import fudan.se.lab4.entity.User;
 import fudan.se.lab4.repository.UserRepository;
 import fudan.se.lab4.repository.impl.UserRepositoryImpl;
 import fudan.se.lab4.service.AccountService;
+import fudan.se.lab4.service.LoggerService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,6 +16,7 @@ public class AccountServiceImpl implements AccountService {
     private static Logger logger = LoggerFactory.getLogger(AccountServiceImpl.class);
     private Boolean hasLogin = false;
     private UserRepository userRepository=new UserRepositoryImpl();
+    private LoggerService loggerService = new LoggerServiceImpl();
     @Override
     public boolean login(User user) {
         //initial
@@ -62,7 +64,7 @@ public class AccountServiceImpl implements AccountService {
                 throw new RuntimeException(InfoConstant.INVALID_PASSWORD);
             }else {
                 userRepository.createUser(user);
-                logger.info(MessageFormat.format(InfoConstant.SUCCESS_TO_SIGN_UP, user.getName()));
+                logger.info(MessageFormat.format(loggerService.log("SUCCESS_TO_SIGN_UP"), user.getName()));
                 return true;
             }
         } catch (RuntimeException e) {
