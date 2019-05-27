@@ -11,10 +11,7 @@ import java.nio.charset.Charset;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 
 public class RuleRepositoryImpl implements RuleRepository {
     DrinkRepositoryImpl drinkRepository = new DrinkRepositoryImpl();
@@ -94,6 +91,12 @@ public class RuleRepositoryImpl implements RuleRepository {
                         dkl.add(drink);
                     }
                 }
+                dkl.sort(new Comparator<Drinks>() {
+                    @Override
+                    public int compare(Drinks o1, Drinks o2) {
+                        return (int)o2.getPrice()*100 - (int)o1.getPrice()*100;
+                    }
+                });
                 Item item = new Item(requireType,number,dkl);
                 retList.add(item);
             }
