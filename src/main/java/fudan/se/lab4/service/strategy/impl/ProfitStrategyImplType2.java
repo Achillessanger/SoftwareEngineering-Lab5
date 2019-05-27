@@ -14,14 +14,14 @@ import fudan.se.lab4.service.strategy.ProfitStrategy;
 import java.util.*;
 
 public class ProfitStrategyImplType2 implements ProfitStrategy {
-    public RuleResult profitProcess(RuleContext ruleContext, Rule rule){
+    public RuleResult profitProcess(RuleContext ruleContext, Rule rule,int max){
         //TODO 相当于原来的RuleServiceImpl.java里的private RuleResult discountType2(RuleContext ruleContext, Rule rule)打折
         String description = "";
         Order order = ruleContext.getOrder();
         DrinkRepository drinkUtil = new DrinkRepositoryImpl();
         double discount = 0.0;
-        //对全体对象基础价格打折
-        if (rule.getIsOnlyBasicsDrinks() == 0 && (rule.getDiscountRange() == null || rule.getDiscountRange().size() == 0)) {
+        //对全体对象全体价格打折
+        if (rule.getIsOnlyBasicsDrinks() == 0 && rule.getDiscountRange() == null) {
             discount += ruleContext.getPurePrice()*(1 - rule.getProfit());
         }else {
             //对某些特定商品打折
@@ -38,73 +38,98 @@ public class ProfitStrategyImplType2 implements ProfitStrategy {
                 }
             }
             //计算打折次数
-            int max = Integer.MAX_VALUE;
+//            int max = Integer.MAX_VALUE;
+            Map<String, Integer> require = new HashMap<>();
+
             for(RuleRepositoryImpl.Item require1 : condition){
-                int index = condition.indexOf(require1);
+//                int index = condition.indexOf(require1);
                 for (Drinks drinks : require1.getDrinksList()) {
                     if(drinkNum.containsKey(drinks.getName()+"#"+drinks.getSize())){
-                        num[index] += drinkNum.get(drinks.getName()+"#"+drinks.getSize());
+                        require.put(drinks.getName() + "#" + drinks.getSize(), drinkNum.get(drinks.getName() + "#" + drinks.getSize()));
                     }
-
                 }
-                int temp = (int) (num[index] / require1.getNumber());
-                if (temp < max) {
-                    //记录最多送多少次
-                    max = temp;
-                }
+//                int temp = (int) (num[index] / require1.getNumber());
+//                if (temp < max) {
+//                    //记录最多送多少次
+//                    max = temp;
+//                }
             }
             //开始打折
             List<RuleRepositoryImpl.Item> discountRange = rule.getDiscountRange();
             for (RuleRepositoryImpl.Item processObject : discountRange) {
-                //最多送几杯如果不是所有都打这个折扣
-                int remain = (int) (max * processObject.getNumber());
-                for (Drinks drinks : processObject.getDrinksList()) {
-                    if (rule.getIsOnlyBasicsDrinks() == 1) {
-                        if (rule.isCanAdd()) {
-                            if(drinkNum.get(drinks)!=null){
-                                discount += drinks.getPrice() * drinkNum.get(drinks) * (1 - rule.getProfit());
-                            }
-                        } else {
-                            if (remain > 0) {
-                                if(drinkNum.get(drinks)!=null){
-                                    if (drinkNum.get(drinks) - remain > 0) {
-                                        discount += drinks.getPrice() * remain * (1 - rule.getProfit());
-                                        break;
-                                    } else {
-                                        discount += drinks.getPrice() * drinkNum.get(drinks) * (1 - rule.getProfit());
-                                        remain -= drinkNum.get(drinks);
-                                    }
-                                }
-
-                            } else {
-                                break;
-                            }
-                        }
-                    } else {
-
-                        if (rule.isCanAdd()) {
-                            if (drinkNum.get(drinks)!=null){
-                                discount += drinks.cost() * drinkNum.get(drinks) * max * (1 - rule.getProfit());
-                            }
-                        } else {
-
-                            if (remain > 0) {
-                                if (drinkNum.get(drinks)!=null){
-                                    if (drinkNum.get(drinks) - remain > 0) {
-                                        discount += drinks.cost() * remain * (1 - rule.getProfit());
-                                        break;
-                                    } else {
-                                        discount += drinks.cost() * drinkNum.get(drinks) * (1 - rule.getProfit());
-                                        remain -= drinkNum.get(drinks);
-                                    }
-                                }
-
-                            } else {
-                                break;
+                if (processObject.getRequiretType()==0){
+                    //表示对drinklist里面的所有饮品打折
+                    if(processObject.getNumber()==0){
+                        for (Drinks drinks:processObject.getDrinksList()){
+                            if (rule.getIsOnlyBasicsDrinks()==1){
+                                discount += drinks.getPrice() * drinkNum.get(drinks.getName()+"#"+drinks.getSize()) * (1 - rule.getProfit());
                             }
                         }
                     }
+                }else {
+                    //最多打折几杯
+                    //默认按照基础价格从高到低的给 此处就不手动排序了
+//                    List<Map.Entry<String, Integer>> sortList = new ArrayList<Map.Entry<String, Integer>>(require.entrySet());
+//                    Collections.sort(sortList, new Comparator<Map.Entry<String, Integer>>() {
+//                        @Override
+//                        public int compare(Map.Entry<String, Integer> o1, Map.Entry<String, Integer> o2) {
+//                            if (rule.getIsOnlyBasicsDrinks() == 1) {
+//                                return (int) drinkUtil.getDrink(o2.getKey().split("#")[0]).getPrice() * 100 - (int) drinkUtil.getDrink(o1.getKey().split("#")[0]).getPrice() * 100;
+//                            }
+//                            return 1;
+//                        }
+//                    });
+//
+                    int remain = (int) (max * processObject.getNumber());
+                    for (Drinks drinks : processObject.getDrinksList()) {
+//                        int remain = (int)(max*processObject.getNumber());
+                        if (rule.getIsOnlyBasicsDrinks() == 1) {
+//                                if(drinkNum.get(drinks)!=null){
+//                                    discount += drinks.getPrice() * drinkNum.get(drinks) * (1 - rule.getProfit());
+//                                }
+                                if (remain > 0) {
+                                    if(require.containsKey(drinks.getName()+"#"+drinks.getSize())){
+                                        if (require.get(drinks.getName()+"#"+drinks.getSize()) - remain > 0) {
+                                            discount += drinks.getPrice() * remain * (1 - rule.getProfit());
+                                            break;
+                                        } else {
+                                            discount += drinks.getPrice() * require.get(drinks.getName()+"#"+drinks.getSize()) * (1 - rule.getProfit());
+                                            remain -= require.get(drinks.getName()+"#"+drinks.getSize());
+                                        }
+                                    }
+
+                                } else {
+                                    break;
+                                }
+
+                        }
+//                        else {
+//
+//                            if (rule.isCanAdd()) {
+//                                if (drinkNum.get(drinks.getName()+"#"+drinks.getSize())!=null){
+//                                    discount += drinks.cost() * drinkNum.get(drinks.getName()+"#"+drinks.getSize()) * max * (1 - rule.getProfit());
+//                                }
+//                            } else {
+//
+//                                if (remain > 0) {
+//                                    if (drinkNum.get(drinks.getName()+"#"+drinks.getSize())!=null){
+//                                        if (drinkNum.get(drinks.getName()+"#"+drinks.getSize()) - remain > 0) {
+//                                            discount += drinks.cost() * remain * (1 - rule.getProfit());
+//                                            break;
+//                                        } else {
+//                                            discount += drinks.cost() * drinkNum.get(drinks.getName()+"#"+drinks.getSize()) * (1 - rule.getProfit());
+//                                            remain -= drinkNum.get(drinks.getName()+"#"+drinks.getSize());
+//                                        }
+//                                    }
+//
+//                                } else {
+//                                    break;
+//                                }
+//                            }
+//                        }
+                    }
                 }
+
             }
         }
 

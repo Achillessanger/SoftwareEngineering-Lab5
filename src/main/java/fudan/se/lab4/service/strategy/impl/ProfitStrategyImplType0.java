@@ -11,14 +11,16 @@ public class ProfitStrategyImplType0 implements ProfitStrategy {
         //TODO 相当于原来的RuleServiceImpl.java里的private RuleResult discountType0(RuleContext ruleContext, Rule rule) 满减
 
         double discount = 0.0;
-        if(rule.getOrderCondition() == null && rule.getDiscountRange().size() == 1 && rule.getDiscountRange().get(0).getDrinksList() == null){
-            double priceBeforeCal = ruleContext.getPurePrice();
-            double condition = rule.getDiscountRange().get(0).getNumber();
-            if(rule.isCanAdd()){
-                int times = (int) (priceBeforeCal / condition);
-                discount += times * rule.getProfit();
-            }else {
-                discount += rule.getProfit();
+        if(rule.getDiscountRange().size() == 1 && rule.getDiscountRange().get(0).getDrinksList() == null){
+            if (rule.getIsOnlyBasicsDrinks()==0){
+                double priceBeforeCal = ruleContext.getPurePrice();
+                double condition = rule.getDiscountRange().get(0).getNumber();
+                if(rule.isCanAdd()){
+                    int times = (int) (priceBeforeCal / condition);
+                    discount += times * rule.getProfit();
+                }else {
+                    discount += rule.getProfit();
+                }
             }
         }else {
             //TODO

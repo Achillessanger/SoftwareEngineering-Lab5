@@ -15,7 +15,7 @@ public interface ProfitStrategy {
      * @param rule
      * @return RuleResult对象
      */
-    RuleResult profitProcess(RuleContext ruleContext, Rule rule);
+    RuleResult profitProcess(RuleContext ruleContext, Rule rule,int valid);
 
     static RuleRepositoryImpl.Item range2Condition(Rule rule, RuleRepositoryImpl.Item processObject){
         for(RuleRepositoryImpl.Item require : rule.getOrderCondition()){
