@@ -1,7 +1,7 @@
 package fudan.se.lab4.context;
 
 import fudan.se.lab4.dto.Order;
-import fudan.se.lab4.dto.Rule;
+import fudan.se.lab4.entity.Rule;
 
 public class RuleContext {
     //商品列表

@@ -3,7 +3,7 @@ package fudan.se.lab4.currency;
 public class Currency {
     private String type;
     private String symbol;
-    private double exrate;
+    private double exrate;//汇率与人民币的转换
 
     public  Currency(String type, String symbol, double exrate) {
         this.type = type;
