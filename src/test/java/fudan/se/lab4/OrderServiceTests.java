@@ -6,8 +6,10 @@ import fudan.se.lab4.dto.Order;
 import fudan.se.lab4.dto.OrderItem;
 import fudan.se.lab4.dto.PaymentInfo;
 import fudan.se.lab4.service.LoggerService;
+import fudan.se.lab4.service.PriceService;
 import fudan.se.lab4.service.impl.LoggerServiceImpl;
 import fudan.se.lab4.service.impl.OrderServiceImpl;
+import fudan.se.lab4.service.impl.PriceServiceImpl;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
@@ -718,6 +720,77 @@ public class OrderServiceTests {
         orderItems.add(new OrderItem("espresso", new ArrayList<>(), 1));
         paymentInfo = orderService.pay(new Order("tea&coffee", orderItems));
         assertTrue(paymentInfoEquals(paymentInfo, new PaymentInfo(80, 12, 68, msgs)));
+    }
+
+    //测试港币
+    @Test
+    public void testHDK(){
+        PriceService priceService = new PriceServiceImpl();
+        priceService.changeCurrentCurrency("HDK");
+        List<OrderItem> orderItems = new ArrayList<>();
+        //测试单饮料价格
+        orderItems.add(new OrderItem("cappuccino", new ArrayList<>(), 1));
+        paymentInfo = orderService.pay(new Order("cappuccino", orderItems));
+        assertTrue(paymentInfoEquals(paymentInfo, new PaymentInfo(30.0, 0, 30.0, EMPTYMSGS)));
+
+        //测试带配料饮料价格
+        orderItems = new ArrayList<>();
+        List<Ingredient> ingredients = new ArrayList<>();
+        ingredients.add(new Ingredient("cream", 1));//1*1.25
+        ingredients.add(new Ingredient("milk", 1));//1.2*1.25
+        orderItems.add(new OrderItem("espresso", ingredients, 1)); //22*1.25
+        paymentInfo = orderService.pay(new Order("0", orderItems));
+        assertTrue(paymentInfoEquals(paymentInfo, new PaymentInfo(30.25, 0, 30.25, EMPTYMSGS)));
+
+        //3杯大Espresso-基础价格打折测试
+        List<String> msgs = new ArrayList<>();
+        ingredients = new ArrayList<>();
+        orderItems = new ArrayList<>();
+        msgs.add(EnvironmentContext.getEnvironmentContext().getBundle().getString(RULE_DES + 1));
+        ingredients.add(new Ingredient("cream", 1));//1*1.25
+        orderItems.add(new OrderItem("espresso", ingredients, 3)); //26*1.25 + 1*1.25
+        orderItems.add(new OrderItem("espresso", new ArrayList<>(), 3)); //26*1.25
+        orderItems.add(new OrderItem("espresso", new ArrayList<>(), 3)); //26*1.25
+        paymentInfo = orderService.pay(new Order("4", orderItems));
+        assertTrue(paymentInfoEquals(paymentInfo, new PaymentInfo(98.75, 10.0, 88.75, msgs)));
+
+        //一小杯加一大杯Cappuccino-基础价格2打折测试
+        msgs = new ArrayList<>();
+        orderItems = new ArrayList<>();
+        msgs.add(EnvironmentContext.getEnvironmentContext().getBundle().getString(RULE_DES + 3));
+        orderItems.add(new OrderItem("cappuccino", new ArrayList<>(), 3)); //28 * 1.25
+        orderItems.add(new OrderItem("cappuccino", ingredients, 1)); //25 * 1.25
+        paymentInfo = orderService.pay(new Order("2", orderItems));
+        assertTrue(paymentInfoEquals(paymentInfo, new PaymentInfo(66.25, 13.75, 52.5, msgs)));
+
+        //4杯小红茶-基础价格买增测试
+        msgs = new ArrayList<>();
+        orderItems = new ArrayList<>();
+        msgs.add(EnvironmentContext.getEnvironmentContext().getBundle().getString(RULE_DES + 2));
+        for (int i = 0; i < 4; i++) {
+            orderItems.add(new OrderItem("greenTea", ingredients, 1));//19*1.25
+        }
+        paymentInfo = orderService.pay(new Order("1", orderItems));
+        assertTrue(paymentInfoEquals(paymentInfo, new PaymentInfo(95, 20, 75, msgs)));
+
+        //买100-30-总价满减测试
+        msgs = new ArrayList<>();
+        orderItems = new ArrayList<>();
+        msgs.add(EnvironmentContext.getEnvironmentContext().getBundle().getString(RULE_DES + 4));
+        for (int i = 0; i < 4; i++) {
+            orderItems.add(new OrderItem("redTea", ingredients, 1));//21*1.25
+        }
+        paymentInfo = orderService.pay(new Order("1", orderItems));
+        assertTrue(paymentInfoEquals(paymentInfo, new PaymentInfo(105.0, 30, 75, msgs)));
+
+        //至少一茶一咖啡85折-总价打折测试
+        orderItems = new ArrayList<>();
+        msgs = new ArrayList<>();
+        msgs.add(EnvironmentContext.getEnvironmentContext().getBundle().getString(RULE_DES+6));
+        orderItems.add(new OrderItem("greenTea", ingredients, 1));//19*1.25
+        orderItems.add(new OrderItem("espresso", new ArrayList<>(), 1));//22*1.25
+        paymentInfo = orderService.pay(new Order("tea&coffee", orderItems));
+        assertTrue(paymentInfoEquals(paymentInfo, new PaymentInfo(51.25, 7.69, 43.56, msgs)));
     }
 
     private boolean paymentInfoEquals(PaymentInfo pay1, PaymentInfo pay2) {
