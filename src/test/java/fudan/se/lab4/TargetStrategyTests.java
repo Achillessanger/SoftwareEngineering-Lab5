@@ -195,14 +195,14 @@ public class TargetStrategyTests {
 
         //5.饮品的数量满足条件，3
         List<OrderItem> orderItems4 = new ArrayList<>();
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < 4; i++) {
             orderItems4.add(new OrderItem("redTea", new ArrayList<>(), 1));
         }
         RuleContext ruleContext4 = new RuleContext(new Order("1", orderItems4), null, 100);
         ruleContexts.put("drinksNullEquals", ruleContext4);
 
         List<OrderItem> orderItems5 = new ArrayList<>();
-        for (int i = 0; i < 2; i++) {
+        for (int i = 0; i < 3; i++) {
             orderItems5.add(new OrderItem("redTea", new ArrayList<>(), 1));
         }
         RuleContext ruleContext5 = new RuleContext(new Order("1", orderItems5), null, 100);
@@ -210,14 +210,14 @@ public class TargetStrategyTests {
 
         //6.某种饮品的数量满足条件，红茶，3
         List<OrderItem> orderItems6 = new ArrayList<>();
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < 4; i++) {
             orderItems6.add(new OrderItem("greenTea", new ArrayList<>(), 1));
         }
         RuleContext ruleContext6 = new RuleContext(new Order("1", orderItems6), null, 100);
         ruleContexts.put("drinksOneLess1", ruleContext6);
 
         List<OrderItem> orderItems7 = new ArrayList<>();
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < 4; i++) {
             orderItems7.add(new OrderItem("redTea", new ArrayList<>(), 3));
         }
         RuleContext ruleContext7 = new RuleContext(new Order("1", orderItems7), null, 100);
@@ -232,7 +232,7 @@ public class TargetStrategyTests {
 
         //7.多种饮品的数量满足条件，红茶，绿茶，卡布奇诺，3
         List<OrderItem> orderItems9 = new ArrayList<>();
-        for (int i = 0; i < 2; i++) {
+        for (int i = 0; i < 3; i++) {
             orderItems9.add(new OrderItem("redTea", new ArrayList<>(), 1));
         }
         orderItems9.add(new OrderItem("greenTea", new ArrayList<>(), 1));
@@ -240,7 +240,7 @@ public class TargetStrategyTests {
         ruleContexts.put("drinksMoreEquals", ruleContext9);
 
         List<OrderItem> orderItems10 = new ArrayList<>();
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < 4; i++) {
             orderItems10.add(new OrderItem("espresso", new ArrayList<>(), 1));
         }
         RuleContext ruleContext10 = new RuleContext(new Order("1", orderItems10), null, 100);
@@ -248,7 +248,7 @@ public class TargetStrategyTests {
 
         //8.优惠条件不可累加，饮品数量，3
         List<OrderItem> orderItems11 = new ArrayList<>();
-        for (int i = 0; i < 7; i++) {
+        for (int i = 0; i < 9; i++) {
             orderItems11.add(new OrderItem("redTea", new ArrayList<>(), 1));
         }
         RuleContext ruleContext11 = new RuleContext(new Order("1", orderItems11), null, 10);
@@ -263,7 +263,7 @@ public class TargetStrategyTests {
 
         //9.多个require，饮品数量，3，红茶，1
         List<OrderItem> orderItems13 = new ArrayList<>();
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < 4; i++) {
             orderItems13.add(new OrderItem("greenTea", new ArrayList<>(), 1));
         }
         RuleContext ruleContext13 = new RuleContext(new Order("1", orderItems13), null, 100);
@@ -273,20 +273,21 @@ public class TargetStrategyTests {
         for (int i = 0; i < 2; i++) {
             orderItems14.add(new OrderItem("greenTea", new ArrayList<>(), 1));
         }
-        orderItems14.add(new OrderItem("redTea", new ArrayList<>(), 1));
-        RuleContext ruleContext14 = new RuleContext(new Order("1", orderItems14), null, 100);
+        for (int i = 0; i < 2; i++) {
+            orderItems14.add(new OrderItem("redTea", new ArrayList<>(), 1));
+        }RuleContext ruleContext14 = new RuleContext(new Order("1", orderItems14), null, 100);
         ruleContexts.put("requireMoreBoth", ruleContext14);
 
         //10.时间限制，饮品数量，3
         List<OrderItem> orderItems15 = new ArrayList<>();
-        for (int i = 0; i < 2; i++) {
+        for (int i = 0; i < 3; i++) {
             orderItems15.add(new OrderItem("greenTea", new ArrayList<>(), 1));
         }
         RuleContext ruleContext15 = new RuleContext(new Order("1", orderItems15), null, 100);
         ruleContexts.put("compositionDrinksLess", ruleContext15);
 
         List<OrderItem> orderItems16 = new ArrayList<>();
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < 4; i++) {
             orderItems16.add(new OrderItem("greenTea", new ArrayList<>(), 1));
         }
         RuleContext ruleContext16 = new RuleContext(new Order("1", orderItems16), null, 100);
