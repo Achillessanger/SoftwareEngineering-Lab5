@@ -243,14 +243,14 @@ public class TargetStrategyTests {
 
         //6.某种饮品的数量满足条件，红茶，3
         List<OrderItem> orderItems6 = new ArrayList<>();
-        for (int i = 0; i < 4; i++) {
-            orderItems6.add(new OrderItem("greenTea", new ArrayList<>(), 1));
+        for (int i = 0; i < 3; i++) {
+            orderItems6.add(new OrderItem("greenTea", new ArrayList<>(), 3));
         }
         RuleContext ruleContext6 = new RuleContext(new Order("1", orderItems6), null, 100);
         ruleContexts.put("drinksOneLess1", ruleContext6);
 
         List<OrderItem> orderItems7 = new ArrayList<>();
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < 3; i++) {
             orderItems7.add(new OrderItem("redTea", new ArrayList<>(), 3));
         }
         RuleContext ruleContext7 = new RuleContext(new Order("1", orderItems7), null, 100);
@@ -265,7 +265,7 @@ public class TargetStrategyTests {
 
         //7.多种饮品的数量满足条件，红茶，绿茶，卡布奇诺，3
         List<OrderItem> orderItems9 = new ArrayList<>();
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < 2; i++) {
             orderItems9.add(new OrderItem("redTea", new ArrayList<>(), 1));
         }
         orderItems9.add(new OrderItem("greenTea", new ArrayList<>(), 1));
@@ -273,7 +273,7 @@ public class TargetStrategyTests {
         ruleContexts.put("drinksMoreEquals", ruleContext9);
 
         List<OrderItem> orderItems10 = new ArrayList<>();
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < 3; i++) {
             orderItems10.add(new OrderItem("espresso", new ArrayList<>(), 1));
         }
         RuleContext ruleContext10 = new RuleContext(new Order("1", orderItems10), null, 100);
@@ -296,7 +296,7 @@ public class TargetStrategyTests {
 
         //9.多个require，饮品数量，3，红茶，1
         List<OrderItem> orderItems13 = new ArrayList<>();
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < 3; i++) {
             orderItems13.add(new OrderItem("greenTea", new ArrayList<>(), 1));
         }
         RuleContext ruleContext13 = new RuleContext(new Order("1", orderItems13), null, 100);
