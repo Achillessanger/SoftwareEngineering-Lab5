@@ -5,8 +5,6 @@ import fudan.se.lab4.dto.Order;
 import fudan.se.lab4.dto.OrderItem;
 import fudan.se.lab4.entity.Rule;
 import fudan.se.lab4.entity.Drinks;
-import fudan.se.lab4.repository.DrinkRepository;
-import fudan.se.lab4.repository.impl.DrinkRepositoryImpl;
 import fudan.se.lab4.repository.impl.RuleRepositoryImpl;
 import fudan.se.lab4.service.LoggerService;
 import fudan.se.lab4.service.impl.LoggerServiceImpl;
@@ -21,18 +19,19 @@ import java.util.List;
 public class TargetStrategyImpl implements TargetStrategy {
     private static Logger logger = LoggerFactory.getLogger(OrderServiceImpl.class);
     private LoggerService loggerService = new LoggerServiceImpl();
-    private DrinkRepository drinkRepository = new DrinkRepositoryImpl();
 
     public int isValid(RuleContext ruleContext, Rule rule) {
+        if (rule.getFrom() == null && rule.getOrderCondition() == null)
+            return 1;
         return min(isTimeValid(new Date(), rule.getFrom(), rule.getTo())
                 , isOrderConditionValid(ruleContext, rule.getOrderCondition(), rule.isCanAdd()));
     }
 
     private int isTimeValid(Date current, Date from, Date to) {
         if (from != null && to != null) {
-            return (current == from || (current.after(from) && current.before(to))) ? 1 : 0;
+            return (current == from || (current.after(from) && current.before(to))) ? 1 : -1;
         }
-        return 1;
+        return Integer.MAX_VALUE;
     }
 
     private int isOrderConditionValid(RuleContext ruleContext, List<RuleRepositoryImpl.Item> orderCondition, Boolean canAdd) {
@@ -41,15 +40,14 @@ public class TargetStrategyImpl implements TargetStrategy {
             for (RuleRepositoryImpl.Item require : orderCondition) {
                 switch (require.getRequiretType()) {
                     case 0:
-                        result = min(result, isPriceValid(ruleContext.getPurePrice(), require.getNumber(), require.getDrinksList()));
+                        result = min(result, isPriceValid(ruleContext.getPurePrice(), require.getNumber(), require.getDrinksList(), canAdd));
                         break;
                     case 1:
                         result = min(result, isDrinksNumValid(ruleContext.getOrder(), require.getDrinksList(), require.getNumber(), canAdd));
                         break;
                     default:
-                        //todo
                         logger.info(loggerService.log("PROMOTION_TYPE_NOT_EXISTED"));
-                        break;
+                        return -1;
                 }
                 if (result == -1)
                     return -1;
@@ -58,25 +56,34 @@ public class TargetStrategyImpl implements TargetStrategy {
         return result;
     }
 
-    private int isPriceValid(double purePrice, double priceCondition, List<Drinks> drinksList) {
-        //todo 价格对应为null
+    private int isPriceValid(double purePrice, double priceCondition, List<Drinks> drinksList, boolean canAdd) {
         if (drinksList != null)
             return -1;
-        return (purePrice >= priceCondition) ? 1 : -1;
+        return (purePrice >= priceCondition) ? (canAdd ? (int) purePrice / (int) priceCondition : 1) : -1;
     }
 
     private int isDrinksNumValid(Order order, List<Drinks> drinksList, double number, boolean canAdd) {
         if (drinksList == null) {
-            return order.getOrderItems().size() / (int) number;
+            return order.getOrderItems().size() >= (int) number ? (canAdd ? order.getOrderItems().size() / (int) number : 1) : -1;
         }
         int realNumber = 0;
         for (OrderItem orderItem : order.getOrderItems()) {
-            realNumber += drinksList.contains(drinkRepository.getDrink(orderItem.getName())) ? 1 : 0;
+            realNumber += contain(drinksList, orderItem) ? 1 : 0;
         }
-        return canAdd ? realNumber / (int) number : 1;
+        return realNumber >= (int) number ? (canAdd ? realNumber / (int) number : 1) : -1;
     }
 
     private int min(int x, int y) {
         return (x > y) ? y : x;
+    }
+
+    private boolean contain(List<Drinks> drinksList, OrderItem orderItem) {
+        for (Drinks drinks1 : drinksList) {
+            if (drinks1.getName().equals(orderItem.getName())) {
+                if (drinks1.getSize() == orderItem.getSize())
+                    return true;
+            }
+        }
+        return false;
     }
 }
