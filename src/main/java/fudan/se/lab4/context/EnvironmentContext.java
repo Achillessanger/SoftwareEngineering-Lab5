@@ -15,13 +15,20 @@ public class EnvironmentContext {
     private ArrayList<String[]> specialDrinks=new ArrayList<>();
     private static final EnvironmentContext environmentContext = new EnvironmentContext();
     private List<Rule> rules;
+    private Currency currencyNow;
     private EnvironmentContext(){
-        String money=bundle.getString("CURRENCY");
+        String money;
+        try {
+            money = new String(bundle.getString("CURRENCY").getBytes("ISO-8859-1"),"UTF-8");
+        }catch (Exception e){
+            throw new RuntimeException(bundle.getString("INIT_FAILED"));
+        }
         String[] curArray=money.split(";");
         for (String key:curArray) {
             String[] array=key.split("_");
             currencies.add(new Currency(array[2],array[0],Double.parseDouble(array[1])));
         }
+        currencyNow = currencies.get(0);
         String special=bundle.getString("SPECIAL");
         if(!special.equals("")){
             String[] speArray=special.split(";");
@@ -52,5 +59,13 @@ public class EnvironmentContext {
 
     public List<Rule> getRules() {
         return rules;
+    }
+
+    public Currency getCurrencyNow() {
+        return currencyNow;
+    }
+
+    public void setCurrencyNow(Currency currencyNow) {
+        this.currencyNow = currencyNow;
     }
 }
