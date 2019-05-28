@@ -86,8 +86,14 @@ public class ProfitStrategyType1Tests {
         RuleResult result = profitStrategy.profitProcess(ruleContext1, ruleMoreKind, 1);
         assertTrue(equals(result, new RuleResult(ruleMoreKind, 18, "twokinds")));
 
+
+        for (int i = 0; i < 2; i++) {
+            orderItems1.add(new OrderItem("greenTea", new ArrayList<>(), 3));
+        }
+        orderItems1.add(new OrderItem("redTea", new ArrayList<>(), 2));
+        ruleContext1 = new RuleContext(new Order("1", orderItems1), null, 100);
         result = profitStrategy.profitProcess(ruleContext1, ruleMoreKind, 2);
-        assertTrue(equals(result, new RuleResult(ruleMoreKind, 34, "twokinds")));
+        assertTrue(equals(result, new RuleResult(ruleMoreKind, 36, "twokinds")));
     }
 
     private boolean equals(RuleResult result1, RuleResult result2) {

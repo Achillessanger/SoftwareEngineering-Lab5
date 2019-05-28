@@ -1,11 +1,15 @@
 package fudan.se.lab4.entity;
 
+import fudan.se.lab4.context.EnvironmentContext;
 import fudan.se.lab4.service.LoggerService;
+import fudan.se.lab4.service.PriceService;
 import fudan.se.lab4.service.impl.LoggerServiceImpl;
+import fudan.se.lab4.service.impl.PriceServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class Ingredient{
+        private PriceService priceService = new PriceServiceImpl();
         private String name;
         private String description;
         private double price;
@@ -52,7 +56,7 @@ public class Ingredient{
         }
 
         public double getPrice() {
-            return price;
+            return priceService.charge(price, EnvironmentContext.getEnvironmentContext().getCurrencyNow());
         }
 
         public void setPrice(double price) {

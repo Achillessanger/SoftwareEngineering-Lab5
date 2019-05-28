@@ -35,8 +35,8 @@ public class ProfitStrategyType0Tests {
         List<RuleRepositoryImpl.Item> discountRange = new ArrayList<>();
         RuleRepositoryImpl.Item discount = new RuleRepositoryImpl().new Item(0, 100, null);
         discountRange.add(discount);
-        ruleCanAdd = new Rule(0, 0, 0, 30, true, null, null, 0, null, discountRange, null, "100-30 canAdd");
 
+        ruleCanAdd = new Rule(0, 0, 0, 30, true, null, null, 0, null, discountRange, null, "100-30 canAdd");
         ruleNotAdd = new Rule(0, 0, 0, 30, false, null, null, 0, null, discountRange, null, "100-30 notAdd");
     }
 

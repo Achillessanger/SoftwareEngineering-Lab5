@@ -10,4 +10,10 @@ public interface PriceService {
      * @return 算过汇率的最后价格
      */
     double charge(double rmb, Currency currency) ;
+
+    /**
+     *
+     * @param name 系统要转换的货币单位 如RMB、HDK等
+     */
+    void changeCurrentCurrency(String name);
 }

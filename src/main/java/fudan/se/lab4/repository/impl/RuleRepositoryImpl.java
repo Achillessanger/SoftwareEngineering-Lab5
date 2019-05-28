@@ -2,6 +2,7 @@ package fudan.se.lab4.repository.impl;
 
 import com.csvreader.CsvReader;
 import fudan.se.lab4.constant.FileConstant;
+import fudan.se.lab4.context.EnvironmentContext;
 import fudan.se.lab4.entity.Drinks;
 import fudan.se.lab4.entity.Rule;
 import fudan.se.lab4.repository.RuleRepository;
@@ -35,14 +36,14 @@ public class RuleRepositoryImpl implements RuleRepository {
         }
     }
 
-    public List<Rule> getRulesFromCSV(String dataFilePath){
+    public List<Rule> getRulesFromCSV(String dataFilePath,ResourceBundle bundle){
         CsvReader reader;
         List<Rule> ret = new ArrayList<>();
         try {
             reader = new CsvReader(dataFilePath, FileConstant.CSV_SEPARATOR, Charset.forName(FileConstant.CHARSET));
             while (reader.readRecord()) {
                 String[] item = reader.getValues();
-                ret.add(getRule(item));
+                ret.add(getRule(item,bundle));
             }
             return ret;
         } catch (IOException e) {
@@ -50,7 +51,7 @@ public class RuleRepositoryImpl implements RuleRepository {
         }
     }
 
-    public Rule getRule(String[] item){
+    public Rule getRule(String[] item,ResourceBundle bundle){
         try {
             int groupId = Integer.parseInt(item[0]);
             int scope = Integer.parseInt(item[1]);
@@ -61,7 +62,7 @@ public class RuleRepositoryImpl implements RuleRepository {
             Date from = (item[5].equals("null"))?null:df.parse(item[5]);
             Date to = (item[6].equals("null"))?null:df.parse(item[6]);
             int isOnlyBasicsDrinks = Integer.parseInt(item[7]);
-            return new Rule(groupId,scope,profitType,profit,canAdd,from,to,isOnlyBasicsDrinks,getRuleList(item[8]),getRuleList(item[9]),getRuleList(item[10]),item[11]);
+            return new Rule(groupId,scope,profitType,profit,canAdd,from,to,isOnlyBasicsDrinks,getRuleList(item[8]),getRuleList(item[9]),getRuleList(item[10]),bundle.getString("RULE_DES_"+item[11]));
         }catch (ParseException e){
             throw new RuntimeException(e.getMessage());
         }
