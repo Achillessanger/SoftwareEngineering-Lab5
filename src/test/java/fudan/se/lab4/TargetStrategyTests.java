@@ -85,7 +85,13 @@ public class TargetStrategyTests {
         RuleRepositoryImpl.Item requireDrinksNull = ruleRepository.new Item(1, 3, null);
         orderConditionDrinksNull.add(requireDrinksNull);
         Rule ruleDrinksNull = new Rule(0, 0, 0, 0, true, null, null, 0, orderConditionDrinksNull, null, null, null);
-        rules.put("drinksNull", ruleDrinksNull);
+        rules.put("drinksNull0", ruleDrinksNull);
+
+        List<RuleRepositoryImpl.Item> orderConditionDrinksNull1 = new ArrayList<>();
+        RuleRepositoryImpl.Item requireDrinksNull1 = ruleRepository.new Item(1, 3, null);
+        orderConditionDrinksNull1.add(requireDrinksNull1);
+        Rule ruleDrinksNull1 = new Rule(0, 0, 1, 0, true, null, null, 0, orderConditionDrinksNull1, null, null, null);
+        rules.put("drinksNull1", ruleDrinksNull1);
 
         //6.优惠条件为单一饮品的数量
         List<RuleRepositoryImpl.Item> orderConditionDrinksOne = new ArrayList<>();
@@ -96,7 +102,17 @@ public class TargetStrategyTests {
         RuleRepositoryImpl.Item requireDrinksOne = ruleRepository.new Item(1, 3, drinksOne);
         orderConditionDrinksOne.add(requireDrinksOne);
         Rule ruleDrinksOne = new Rule(0, 0, 0, 0, true, null, null, 0, orderConditionDrinksOne, null, null, null);
-        rules.put("drinksOne", ruleDrinksOne);
+        rules.put("drinksOne0", ruleDrinksOne);
+
+//        List<RuleRepositoryImpl.Item> orderConditionDrinksOne1 = new ArrayList<>();
+//        List<Drinks> drinksOne1 = new ArrayList<>();
+//        Drinks redTea1 = drinkRepository.getDrink("redTea");
+//        redTea1.setSize(3);
+//        drinksOne1.add(redTea1);
+//        RuleRepositoryImpl.Item requireDrinksOne1 = ruleRepository.new Item(1, 3, drinksOne1);
+//        orderConditionDrinksOne1.add(requireDrinksOne1);
+//        Rule ruleDrinksOne1 = new Rule(0, 0, 1, 0, true, null, null, 0, orderConditionDrinksOne1, null, null, null);
+//        rules.put("drinksOne1", ruleDrinksOne1);
 
         //7.优惠条件为多种饮品的数量
         List<RuleRepositoryImpl.Item> orderConditionDrinksMore = new ArrayList<>();
@@ -107,7 +123,17 @@ public class TargetStrategyTests {
         RuleRepositoryImpl.Item requireDrinksMore = ruleRepository.new Item(1, 3, drinksMore);
         orderConditionDrinksMore.add(requireDrinksMore);
         Rule ruleDrinksMore = new Rule(0, 0, 0, 0, true, null, null, 0, orderConditionDrinksMore, null, null, null);
-        rules.put("drinksMore", ruleDrinksMore);
+        rules.put("drinksMore0", ruleDrinksMore);
+
+//        List<RuleRepositoryImpl.Item> orderConditionDrinksMore1 = new ArrayList<>();
+//        List<Drinks> drinksMore1 = new ArrayList<>();
+//        drinksMore1.add(drinkRepository.getDrink("redTea"));
+//        drinksMore1.add(drinkRepository.getDrink("greenTea"));
+//        drinksMore1.add(drinkRepository.getDrink("cappuccino"));
+//        RuleRepositoryImpl.Item requireDrinksMore1 = ruleRepository.new Item(1, 3, drinksMore1);
+//        orderConditionDrinksMore1.add(requireDrinksMore1);
+//        Rule ruleDrinksMore1 = new Rule(0, 0, 0, 0, true, null, null, 0, orderConditionDrinksMore1, null, null, null);
+//        rules.put("drinksMore1", ruleDrinksMore1);
 
         //8.优惠条件为不可累加的
         List<RuleRepositoryImpl.Item> orderConditionCanAddPrice = new ArrayList<>();
@@ -199,14 +225,21 @@ public class TargetStrategyTests {
             orderItems4.add(new OrderItem("redTea", new ArrayList<>(), 1));
         }
         RuleContext ruleContext4 = new RuleContext(new Order("1", orderItems4), null, 100);
-        ruleContexts.put("drinksNullEquals", ruleContext4);
+        ruleContexts.put("drinksNull4", ruleContext4);
 
         List<OrderItem> orderItems5 = new ArrayList<>();
         for (int i = 0; i < 3; i++) {
             orderItems5.add(new OrderItem("redTea", new ArrayList<>(), 1));
         }
         RuleContext ruleContext5 = new RuleContext(new Order("1", orderItems5), null, 100);
-        ruleContexts.put("drinksNullLess", ruleContext5);
+        ruleContexts.put("drinksNull3", ruleContext5);
+
+        List<OrderItem> orderItems17 = new ArrayList<>();
+        for (int i = 0; i < 2; i++) {
+            orderItems17.add(new OrderItem("redTea", new ArrayList<>(), 1));
+        }
+        RuleContext ruleContext17 = new RuleContext(new Order("1", orderItems17), null, 100);
+        ruleContexts.put("drinksNull2", ruleContext17);
 
         //6.某种饮品的数量满足条件，红茶，3
         List<OrderItem> orderItems6 = new ArrayList<>();
@@ -275,19 +308,20 @@ public class TargetStrategyTests {
         }
         for (int i = 0; i < 2; i++) {
             orderItems14.add(new OrderItem("redTea", new ArrayList<>(), 1));
-        }RuleContext ruleContext14 = new RuleContext(new Order("1", orderItems14), null, 100);
+        }
+        RuleContext ruleContext14 = new RuleContext(new Order("1", orderItems14), null, 100);
         ruleContexts.put("requireMoreBoth", ruleContext14);
 
         //10.时间限制，饮品数量，3
         List<OrderItem> orderItems15 = new ArrayList<>();
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < 2; i++) {
             orderItems15.add(new OrderItem("greenTea", new ArrayList<>(), 1));
         }
         RuleContext ruleContext15 = new RuleContext(new Order("1", orderItems15), null, 100);
         ruleContexts.put("compositionDrinksLess", ruleContext15);
 
         List<OrderItem> orderItems16 = new ArrayList<>();
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < 3; i++) {
             orderItems16.add(new OrderItem("greenTea", new ArrayList<>(), 1));
         }
         RuleContext ruleContext16 = new RuleContext(new Order("1", orderItems16), null, 100);
@@ -328,29 +362,35 @@ public class TargetStrategyTests {
     }
 
     @Test
-    public void testDrinksNull() {
-        assertTrue(isValid("drinksNullEquals", "drinksNull", 1));
-        assertTrue(isValid("drinksNullLess", "drinksNull", -1));
+    public void testDrinksNull0() {
+        assertTrue(isValid("drinksNull3", "drinksNull0", 1));
+        assertTrue(isValid("drinksNull2", "drinksNull0", -1));
+    }
+
+    @Test
+    public void testDrinksNull1() {
+        assertTrue(isValid("drinksNull4", "drinksNull1", 1));
+        assertTrue(isValid("drinksNull3", "drinksNull1", -1));
     }
 
     @Test
     public void testDrinksOne() {
-        assertTrue(isValid("drinksOneEquals", "drinksOne", 1));
-        assertTrue(isValid("drinksOneLess1", "drinksOne", -1));
-        assertTrue(isValid("drinksOneLess2", "drinksOne", -1));
+        assertTrue(isValid("drinksOneEquals", "drinksOne0", 1));
+        assertTrue(isValid("drinksOneLess1", "drinksOne0", -1));
+        assertTrue(isValid("drinksOneLess2", "drinksOne0", -1));
     }
 
     @Test
     public void testDrinksMore() {
-        assertTrue(isValid("drinksMoreEquals", "drinksMore", 1));
-        assertTrue(isValid("drinksMoreLess", "drinksMore", -1));
+        assertTrue(isValid("drinksMoreEquals", "drinksMore0", 1));
+        assertTrue(isValid("drinksMoreLess", "drinksMore0", -1));
     }
 
     @Test
     public void testNotAdd() {
         assertTrue(isValid("notAddPrice", "canAddPrice", 2));
         assertTrue(isValid("notAddPrice", "notAddPrice", 1));
-        assertTrue(isValid("notAddDrinks", "canAddDrinks", 2));
+        assertTrue(isValid("notAddDrinks", "canAddDrinks", 3));
         assertTrue(isValid("notAddDrinks", "notAddDrinks", 1));
     }
 

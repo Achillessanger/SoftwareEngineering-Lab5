@@ -159,13 +159,6 @@ public class OrderServiceTests {
         orderItems.add(new OrderItem("greenTea", new ArrayList<>(), 1));
         paymentInfo = orderService.pay(new Order("tea", orderItems));
         assertTrue(paymentInfoEquals(paymentInfo, new PaymentInfo(38, 0, 38, EMPTYMSGS)));
-
-        //3.
-        orderItems.remove(1);
-        orderItems.add(new OrderItem("espresso", new ArrayList<>(), 1));
-        paymentInfo = orderService.pay(new Order("tea", orderItems));
-        assertTrue(paymentInfoEquals(paymentInfo, new PaymentInfo(42, 0, 42, EMPTYMSGS)));
-
     }
 
     // 测试饮品数量size 不存在为null的情况，以下只分过大和过小的情况
@@ -387,7 +380,7 @@ public class OrderServiceTests {
         assertTrue(paymentInfoEquals(paymentInfo, new PaymentInfo(48, 0, 48, msgs)));
 
         //3.
-        msgs.add("espresso: 每2杯,2杯8.0折");
+        msgs.add("a 20% discount on every two Espresso(only big size)(basic-price)");
         orderItems.remove(1);
         List<Ingredient> ingredients3 = new ArrayList<>();
         ingredients3.add(new Ingredient("cream", 1));
@@ -408,6 +401,7 @@ public class OrderServiceTests {
         //2.一小杯加一大杯
         //3.两个小杯，其中一个加入配料
         //4.三杯
+        //5.四大杯
 
         List<OrderItem> orderItems = new ArrayList<>();
         List<String> msgs = new ArrayList<>();
@@ -417,7 +411,7 @@ public class OrderServiceTests {
         paymentInfo = orderService.pay(new Order("1", orderItems));
         assertTrue(paymentInfoEquals(paymentInfo, new PaymentInfo(24, 0, 24, msgs)));
 
-        msgs.add("cappuccino: 每2杯,1杯5.0折");
+        msgs.add("every two Cappuccino，the second cup of half-price(basic-price)");
         //2.
         orderItems.add(new OrderItem("cappuccino", new ArrayList<>(), 3));
         paymentInfo = orderService.pay(new Order("2", orderItems));
@@ -437,6 +431,15 @@ public class OrderServiceTests {
         orderItems.add(new OrderItem("cappuccino", new ArrayList<>(), 3));
         paymentInfo = orderService.pay(new Order("4", orderItems));
         assertTrue(paymentInfoEquals(paymentInfo, new PaymentInfo(78, 11, 67, msgs)));
+
+        //5.
+        orderItems.clear();
+        for (int i = 0; i < 4; i++) {
+            orderItems.add(new OrderItem("cappuccino", new ArrayList<>(), 1));
+        }
+        paymentInfo = orderService.pay(new Order("4", orderItems));
+        assertTrue(paymentInfoEquals(paymentInfo, new PaymentInfo(96, 22, 74, msgs)));
+
     }
 
     // 对红茶的优惠方式一的测试
@@ -458,7 +461,7 @@ public class OrderServiceTests {
         paymentInfo = orderService.pay(new Order("1", orderItems));
         assertTrue(paymentInfoEquals(paymentInfo, new PaymentInfo(60, 0, 60, msgs)));
 
-        msgs.add("redTea :买3杯送1杯");
+        msgs.add("a free drink for every 3 cups of either red tea or green tea(basic-price)");
         //4.
         orderItems.add(new OrderItem("redTea", new ArrayList<>(), 3));
         paymentInfo = orderService.pay(new Order("4", orderItems));
@@ -491,7 +494,7 @@ public class OrderServiceTests {
         //1.4杯小杯绿茶
         List<OrderItem> orderItems = new ArrayList<>();
         List<String> msgs = new ArrayList<>();
-        msgs.add("greenTea :买3杯送1杯");
+        msgs.add("a free drink for every 3 cups of either red tea or green tea(basic-price)");
         for (int i = 0; i < 4; i++) {
             orderItems.add(new OrderItem("greenTea", new ArrayList<>(), 1));
         }
@@ -507,7 +510,7 @@ public class OrderServiceTests {
         //3.满减，九杯茶，一杯红茶
         List<OrderItem> orderItems = new ArrayList<>();
         List<String> msgs = new ArrayList<>();
-        msgs.add("redTea greenTea :买3杯送1杯");
+        msgs.add("a free drink for every 3 cups of either red tea or green tea(basic-price)");
 
         //1.
         for (int i = 0; i < 7; i++) {
@@ -545,7 +548,7 @@ public class OrderServiceTests {
         paymentInfo = orderService.pay(new Order("1", orderItems));
         assertTrue(paymentInfoEquals(paymentInfo, new PaymentInfo(22, 0, 22, msgs)));
 
-        msgs.add("满100减30.0");
+        msgs.add("subtract 30 from every 100 for the whole order(whole-price)");
         //2.
         orderItems.add(new OrderItem("espresso", new ArrayList<>(), 2));
         for (int i = 0; i < 3; i++) {
@@ -577,8 +580,8 @@ public class OrderServiceTests {
         int i = 0;
 
         //1.
-        msgs.add("espresso: 每2杯,2杯8.0折");
-        msgs.add("cappuccino: 每2杯,1杯5.0折");
+        msgs.add("a 20% discount on every two Espresso(only big size)(basic-price)");
+        msgs.add("every two Cappuccino，the second cup of half-price(basic-price)");
         for (; i < 2; i++) {
             orderItems.add(new OrderItem("espresso", new ArrayList<>(), 3));
         }
@@ -590,8 +593,8 @@ public class OrderServiceTests {
 
         //2.
         msgs.clear();
-        msgs.add("greenTea :买3杯送1杯");
-        msgs.add("cappuccino: 每2杯,1杯5.0折");
+        msgs.add("a free drink for every 3 cups of either red tea or green tea(basic-price)");
+        msgs.add("every two Cappuccino，the second cup of half-price(basic-price)");
         orderItems.clear();
         for (i = 0; i < 8; i++) {
             orderItems.add(new OrderItem("greenTea", new ArrayList<>(), 1));
@@ -604,8 +607,8 @@ public class OrderServiceTests {
 
         //3.
         msgs.clear();
-        msgs.add("espresso: 每2杯,2杯8.0折");
-        msgs.add("greenTea :买3杯送1杯");
+        msgs.add("a 20% discount on every two Espresso(only big size)(basic-price)");
+        msgs.add("a free drink for every 3 cups of either red tea or green tea(basic-price)");
         orderItems.clear();
         for (i = 0; i < 8; i++) {
             orderItems.add(new OrderItem("greenTea", new ArrayList<>(), 1));
@@ -619,9 +622,9 @@ public class OrderServiceTests {
         //4.
         orderItems.clear();
         msgs.clear();
-        msgs.add("espresso: 每2杯,2杯8.0折");
-        msgs.add("greenTea :买3杯送1杯");
-        msgs.add("cappuccino: 每2杯,1杯5.0折");
+        msgs.add("a 20% discount on every two Espresso(only big size)(basic-price)");
+        msgs.add("a free drink for every 3 cups of either red tea or green tea(basic-price)");
+        msgs.add("every two Cappuccino，the second cup of half-price(basic-price)");
         for (i = 0; i < 2; i++) {
             orderItems.add(new OrderItem("espresso", new ArrayList<>(), 3));
         }
@@ -646,7 +649,7 @@ public class OrderServiceTests {
         List<String> msgs = new ArrayList<>();
 
         //1.
-        msgs.add("满100减30.0");
+        msgs.add("subtract 30 from every 100 for the whole order(whole-price)");
         for (int i = 0; i < 5; i++) {
             orderItems.add(new OrderItem("redTea", new ArrayList<>(), 1));
         }
@@ -656,7 +659,7 @@ public class OrderServiceTests {
         //2.
         orderItems.clear();
         msgs.clear();
-        msgs.add("redTea greenTea :买3杯送1杯");
+        msgs.add("a free drink for every 3 cups of either red tea or green tea(basic-price)");
         for (int i = 0; i < 7; i++) {
             orderItems.add(new OrderItem("greenTea", new ArrayList<>(), 1));
         }
@@ -667,8 +670,8 @@ public class OrderServiceTests {
         //3.
         orderItems.clear();
         msgs.clear();
-        msgs.add("espresso: 每2杯,2杯8.0折");
-        msgs.add("cappuccino: 每2杯,1杯5.0折");
+        msgs.add("a 20% discount on every two Espresso(only big size)(basic-price)");
+        msgs.add("every two Cappuccino，the second cup of half-price(basic-price)");
         for (int i = 0; i < 4; i++) {
             orderItems.add(new OrderItem("cappuccino", new ArrayList<>(), 1));
         }
@@ -679,7 +682,42 @@ public class OrderServiceTests {
         paymentInfo = orderService.pay(new Order("3", orderItems));
         assertTrue(paymentInfoEquals(paymentInfo, new PaymentInfo(148, 30, 118, msgs)));
     }
+    
+    @Test
+    public void testTime() {
+        List<OrderItem> orderItems = new ArrayList<>();
+        List<String> msgs = new ArrayList<>();
+        orderItems.add(new OrderItem("espresso", new ArrayList<>(), 3));
+        paymentInfo = orderService.pay(new Order("1", orderItems));
+        assertTrue(paymentInfoEquals(paymentInfo, new PaymentInfo(26, 0, 26, msgs)));
+    }
 
+    //todo 测试满足时间11-11
+    @Test
+    public void testTimeCorrect(){
+        List<OrderItem> orderItems = new ArrayList<>();
+        List<String> msgs = new ArrayList<>();
+        orderItems.add(new OrderItem("espresso", new ArrayList<>(), 3));
+        paymentInfo = orderService.pay(new Order("1", orderItems));
+        assertTrue(paymentInfoEquals(paymentInfo, new PaymentInfo(26, 13, 13, msgs)));
+    }
+
+    //至少有一茶类和一咖啡类，打八五折
+    @Test
+    public void testTeaAndCoffee() {
+        List<OrderItem> orderItems = new ArrayList<>();
+        List<String> msgs = new ArrayList<>();
+        msgs.add("when buying at least one cup of tea and one cup of coffee，15% off for your order(whole-price)");
+        orderItems.add(new OrderItem("greenTea", new ArrayList<>(), 1));
+        orderItems.add(new OrderItem("espresso", new ArrayList<>(), 1));
+        paymentInfo = orderService.pay(new Order("tea&coffee", orderItems));
+        assertTrue(paymentInfoEquals(paymentInfo, new PaymentInfo(40, 6, 34, msgs)));
+
+        orderItems.add(new OrderItem("greenTea", new ArrayList<>(), 1));
+        orderItems.add(new OrderItem("espresso", new ArrayList<>(), 1));
+        paymentInfo = orderService.pay(new Order("tea&coffee", orderItems));
+        assertTrue(paymentInfoEquals(paymentInfo, new PaymentInfo(80, 12, 68, msgs)));
+    }
 
     private boolean paymentInfoEquals(PaymentInfo pay1, PaymentInfo pay2) {
         if (pay1 == pay2) {
@@ -697,10 +735,10 @@ public class OrderServiceTests {
         if (Math.abs(pay1.getDiscountPrice() - pay2.getDiscountPrice()) > 0.01) {
             return false;
         }
-//        List<String> msgs = pay1.getMsgs();
-//        if (msgs == null || !msgs.equals(pay2.getMsgs())) {
-//            return false;
-//        }
+        List<String> msgs = pay1.getMsgs();
+        if (msgs == null || !msgs.equals(pay2.getMsgs())) {
+            return false;
+        }
         return true;
     }
 }
