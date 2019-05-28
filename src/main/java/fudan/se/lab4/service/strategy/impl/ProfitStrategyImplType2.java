@@ -11,12 +11,15 @@ import fudan.se.lab4.repository.impl.DrinkRepositoryImpl;
 import fudan.se.lab4.repository.impl.RuleRepositoryImpl;
 import fudan.se.lab4.service.strategy.ProfitStrategy;
 
+import java.text.NumberFormat;
 import java.util.*;
 
 public class ProfitStrategyImplType2 implements ProfitStrategy {
+    NumberFormat nf = NumberFormat.getNumberInstance();
+
     public RuleResult profitProcess(RuleContext ruleContext, Rule rule, int max) {
         //TODO 相当于原来的RuleServiceImpl.java里的private RuleResult discountType2(RuleContext ruleContext, Rule rule)打折
-        String description = "";
+        nf.setMaximumFractionDigits(2);
         Order order = ruleContext.getOrder();
         DrinkRepository drinkUtil = new DrinkRepositoryImpl();
         double discount = 0.0;
@@ -25,9 +28,9 @@ public class ProfitStrategyImplType2 implements ProfitStrategy {
             discount += ruleContext.getPurePrice() * (1 - rule.getProfit());
         } else {
             //对某些特定商品打折
-            List<RuleRepositoryImpl.Item> condition = rule.getOrderCondition();
-            int[] num = new int[condition.size()];
-            //先记录订单中出现的所有饮品的数量
+            List<RuleRepositoryImpl.Item> condition = rule.getDiscountRange();
+////            int[] num = new int[condition.size()];
+//            //先记录订单中出现的所有饮品的数量
             Map<String, Integer> drinkNum = new HashMap<>();
             for (OrderItem orderItem : order.getOrderItems()) {
                 String key = orderItem.getName() + "#" + orderItem.getSize();
@@ -40,7 +43,7 @@ public class ProfitStrategyImplType2 implements ProfitStrategy {
             //计算打折次数
 //            int max = Integer.MAX_VALUE;
             Map<String, Integer> require = new HashMap<>();
-
+//
             for (RuleRepositoryImpl.Item require1 : condition) {
 //                int index = condition.indexOf(require1);
                 for (Drinks drinks : require1.getDrinksList()) {
@@ -62,7 +65,10 @@ public class ProfitStrategyImplType2 implements ProfitStrategy {
                     if (processObject.getNumber() == 0) {
                         for (Drinks drinks : processObject.getDrinksList()) {
                             if (rule.getIsOnlyBasicsDrinks() == 1) {
-                                discount += drinks.getPrice() * drinkNum.get(drinks.getName() + "#" + drinks.getSize()) * (1 - rule.getProfit());
+                                if (drinkNum.containsKey(drinks.getName() + "#" + drinks.getSize())) {
+                                    discount += drinks.getPrice() * drinkNum.get(drinks.getName() + "#" + drinks.getSize()) * (1 - rule.getProfit());
+                                }
+
                             }
                         }
                     }
@@ -133,6 +139,6 @@ public class ProfitStrategyImplType2 implements ProfitStrategy {
             }
         }
 
-        return new RuleResult(rule, discount, rule.getDescirption());
+        return new RuleResult(rule, Double.parseDouble(nf.format(discount)), rule.getDescirption());
     }
 }
