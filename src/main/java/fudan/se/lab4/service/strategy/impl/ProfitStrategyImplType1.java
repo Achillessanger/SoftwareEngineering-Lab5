@@ -13,13 +13,13 @@ import fudan.se.lab4.service.strategy.ProfitStrategy;
 
 import java.util.*;
 
-public class ProfitStratrgyImplType1 implements ProfitStrategy {
-    public RuleResult profitProcess(RuleContext ruleContext, Rule rule,int max) {
+public class ProfitStrategyImplType1 implements ProfitStrategy {
+    public RuleResult profitProcess(RuleContext ruleContext, Rule rule, int max) {
         //TODO 相当于原来的RuleServiceImpl.java里的private RuleResult discountType1(RuleContext ruleContext, Rule rule) 满赠
         String description = "";
         double discount = 0.0;
         Order order = ruleContext.getOrder();
-      //  Map<Drinks, Integer> sendDrinks = new HashMap<>();
+        //  Map<Drinks, Integer> sendDrinks = new HashMap<>();
         DrinkRepository drinkUtil = new DrinkRepositoryImpl();
         //对全部订单生效，无条件赠送
 //        if (rule.getDiscountRange() == null || rule.getDiscountRange().size() == 0) {
@@ -105,26 +105,25 @@ public class ProfitStratrgyImplType1 implements ProfitStrategy {
 
                 for (Map.Entry<String, Integer> mapping : sortList) {
                     //默认discountRange的size=1
-                    max =(int) (max *rule.getProfit());
+                    max = (int) (max * rule.getProfit());
                     if (max <= 0) {
                         break;
                     }
                     if (mapping.getValue() - max > 0) {
-                        discount += max *drinkUtil.getDrink(mapping.getKey().split("#")[0]).getPrice() ;
-                       // sendDrinks.put(mapping.getKey(), max);
+                        discount += max * drinkUtil.getDrink(mapping.getKey().split("#")[0]).getPrice();
+                        // sendDrinks.put(mapping.getKey(), max);
                         break;
                     } else {
-                        discount += mapping.getValue() *drinkUtil.getDrink(mapping.getKey().split("#")[0]).getPrice() ;;
-                    //    sendDrinks.put(mapping.getKey(), max);
+                        discount += mapping.getValue() * drinkUtil.getDrink(mapping.getKey().split("#")[0]).getPrice();
+                        ;
+                        //    sendDrinks.put(mapping.getKey(), max);
                         max = max - mapping.getValue();
                     }
                 }
 
             }
         }
-
-        description = (discount == 0.0) ? "" : description;
-        return new RuleResult(rule, discount, description);
+        return new RuleResult(rule, discount, rule.getDescirption());
     }
 
 }

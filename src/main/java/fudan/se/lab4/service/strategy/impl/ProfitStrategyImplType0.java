@@ -26,7 +26,6 @@ public class ProfitStrategyImplType0 implements ProfitStrategy {
             //TODO
         }
 
-        String description = (discount == 0.0) ? "":rule.getDescirption();
-        return new RuleResult(rule, discount, description);
+        return new RuleResult(rule, discount, rule.getDescirption());
     }
 }

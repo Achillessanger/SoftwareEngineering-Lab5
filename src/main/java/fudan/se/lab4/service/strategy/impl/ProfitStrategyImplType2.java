@@ -14,7 +14,7 @@ import fudan.se.lab4.service.strategy.ProfitStrategy;
 import java.util.*;
 
 public class ProfitStrategyImplType2 implements ProfitStrategy {
-    public RuleResult profitProcess(RuleContext ruleContext, Rule rule,int max){
+    public RuleResult profitProcess(RuleContext ruleContext, Rule rule, int max) {
         //TODO 相当于原来的RuleServiceImpl.java里的private RuleResult discountType2(RuleContext ruleContext, Rule rule)打折
         String description = "";
         Order order = ruleContext.getOrder();
@@ -22,15 +22,15 @@ public class ProfitStrategyImplType2 implements ProfitStrategy {
         double discount = 0.0;
         //对全体对象全体价格打折
         if (rule.getIsOnlyBasicsDrinks() == 0 && rule.getDiscountRange() == null) {
-            discount += ruleContext.getPurePrice()*(1 - rule.getProfit());
-        }else {
+            discount += ruleContext.getPurePrice() * (1 - rule.getProfit());
+        } else {
             //对某些特定商品打折
             List<RuleRepositoryImpl.Item> condition = rule.getOrderCondition();
             int[] num = new int[condition.size()];
             //先记录订单中出现的所有饮品的数量
             Map<String, Integer> drinkNum = new HashMap<>();
             for (OrderItem orderItem : order.getOrderItems()) {
-                String key = orderItem.getName()+"#"+orderItem.getSize();
+                String key = orderItem.getName() + "#" + orderItem.getSize();
                 if (!drinkNum.containsKey(key)) {
                     drinkNum.put(key, 1);
                 } else {
@@ -41,10 +41,10 @@ public class ProfitStrategyImplType2 implements ProfitStrategy {
 //            int max = Integer.MAX_VALUE;
             Map<String, Integer> require = new HashMap<>();
 
-            for(RuleRepositoryImpl.Item require1 : condition){
+            for (RuleRepositoryImpl.Item require1 : condition) {
 //                int index = condition.indexOf(require1);
                 for (Drinks drinks : require1.getDrinksList()) {
-                    if(drinkNum.containsKey(drinks.getName()+"#"+drinks.getSize())){
+                    if (drinkNum.containsKey(drinks.getName() + "#" + drinks.getSize())) {
                         require.put(drinks.getName() + "#" + drinks.getSize(), drinkNum.get(drinks.getName() + "#" + drinks.getSize()));
                     }
                 }
@@ -57,16 +57,16 @@ public class ProfitStrategyImplType2 implements ProfitStrategy {
             //开始打折
             List<RuleRepositoryImpl.Item> discountRange = rule.getDiscountRange();
             for (RuleRepositoryImpl.Item processObject : discountRange) {
-                if (processObject.getRequiretType()==0){
+                if (processObject.getRequiretType() == 0) {
                     //表示对drinklist里面的所有饮品打折
-                    if(processObject.getNumber()==0){
-                        for (Drinks drinks:processObject.getDrinksList()){
-                            if (rule.getIsOnlyBasicsDrinks()==1){
-                                discount += drinks.getPrice() * drinkNum.get(drinks.getName()+"#"+drinks.getSize()) * (1 - rule.getProfit());
+                    if (processObject.getNumber() == 0) {
+                        for (Drinks drinks : processObject.getDrinksList()) {
+                            if (rule.getIsOnlyBasicsDrinks() == 1) {
+                                discount += drinks.getPrice() * drinkNum.get(drinks.getName() + "#" + drinks.getSize()) * (1 - rule.getProfit());
                             }
                         }
                     }
-                }else {
+                } else {
                     //最多打折几杯
                     //默认按照基础价格从高到低的给 此处就不手动排序了
 //                    List<Map.Entry<String, Integer>> sortList = new ArrayList<Map.Entry<String, Integer>>(require.entrySet());
@@ -87,20 +87,20 @@ public class ProfitStrategyImplType2 implements ProfitStrategy {
 //                                if(drinkNum.get(drinks)!=null){
 //                                    discount += drinks.getPrice() * drinkNum.get(drinks) * (1 - rule.getProfit());
 //                                }
-                                if (remain > 0) {
-                                    if(require.containsKey(drinks.getName()+"#"+drinks.getSize())){
-                                        if (require.get(drinks.getName()+"#"+drinks.getSize()) - remain > 0) {
-                                            discount += drinks.getPrice() * remain * (1 - rule.getProfit());
-                                            break;
-                                        } else {
-                                            discount += drinks.getPrice() * require.get(drinks.getName()+"#"+drinks.getSize()) * (1 - rule.getProfit());
-                                            remain -= require.get(drinks.getName()+"#"+drinks.getSize());
-                                        }
+                            if (remain > 0) {
+                                if (require.containsKey(drinks.getName() + "#" + drinks.getSize())) {
+                                    if (require.get(drinks.getName() + "#" + drinks.getSize()) - remain > 0) {
+                                        discount += drinks.getPrice() * remain * (1 - rule.getProfit());
+                                        break;
+                                    } else {
+                                        discount += drinks.getPrice() * require.get(drinks.getName() + "#" + drinks.getSize()) * (1 - rule.getProfit());
+                                        remain -= require.get(drinks.getName() + "#" + drinks.getSize());
                                     }
-
-                                } else {
-                                    break;
                                 }
+
+                            } else {
+                                break;
+                            }
 
                         }
 //                        else {
@@ -133,6 +133,6 @@ public class ProfitStrategyImplType2 implements ProfitStrategy {
             }
         }
 
-        return new RuleResult(rule, discount, description);
+        return new RuleResult(rule, discount, rule.getDescirption());
     }
 }
