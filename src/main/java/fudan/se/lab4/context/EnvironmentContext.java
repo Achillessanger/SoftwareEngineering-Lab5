@@ -1,5 +1,6 @@
 package fudan.se.lab4.context;
 
+import fudan.se.lab4.constant.FileConstant;
 import fudan.se.lab4.currency.Currency;
 import fudan.se.lab4.entity.Drinks;
 import fudan.se.lab4.entity.Rule;
@@ -22,14 +23,16 @@ public class EnvironmentContext {
             currencies.add(new Currency(array[2],array[0],Double.parseDouble(array[1])));
         }
         String special=bundle.getString("SPECIAL");
-        String[] speArray=special.split(";");
-        for (String key:speArray) {
-            String[] array=key.split(",");
-            specialDrinks.add(array);
+        if(!special.equals("")){
+            String[] speArray=special.split(";");
+            for (String key:speArray) {
+                String[] array=key.split(",");
+                specialDrinks.add(array);
+            }
         }
 
         RuleRepository ruleRepository = new RuleRepositoryImpl();
-        this.rules = ruleRepository.getRulesFromCSV(bundle.getString("SALESRULES_CSV"));
+        this.rules = ruleRepository.getRulesFromCSV(FileConstant.SALESRULES_CSV,bundle);
     }
     public static EnvironmentContext getEnvironmentContext(){
         return environmentContext;
