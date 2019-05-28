@@ -35,8 +35,7 @@ public class RuleRepositoryImpl implements RuleRepository {
         }
     }
 
-    public List<Rule> getRulesFromCSV(){
-        String dataFilePath = FileConstant.SALESRULES_CSV;
+    public List<Rule> getRulesFromCSV(String dataFilePath){
         CsvReader reader;
         List<Rule> ret = new ArrayList<>();
         try {

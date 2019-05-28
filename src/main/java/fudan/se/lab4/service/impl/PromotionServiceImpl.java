@@ -1,5 +1,6 @@
 package fudan.se.lab4.service.impl;
 
+import fudan.se.lab4.context.EnvironmentContext;
 import fudan.se.lab4.context.RuleContext;
 import fudan.se.lab4.dto.Order;
 import fudan.se.lab4.dto.PromotionResult;
@@ -13,16 +14,9 @@ import fudan.se.lab4.service.PromotionService;
 import java.util.*;
 
 public class PromotionServiceImpl implements PromotionService {
-    List<Rule> rules;
+    List<Rule> rules = EnvironmentContext.getEnvironmentContext().getRules();
 
     //本来应该从数据库的促销规则表中读取数据，因为本次lab不涉及数据库表设计，故在此写死，若要添加或修改促销规则，在此处修改一次即可
-
-    public void initSaleRule(){
-        RuleRepository ruleRepository = new RuleRepositoryImpl();
-        rules = ruleRepository.getRulesFromCSV();
-//        return
-    }
-
 
     @Override
     public PromotionResult chooseRules(Order order, double purePrice) {

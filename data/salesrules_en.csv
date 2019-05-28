@@ -1,0 +1,6 @@
+0,0,2,0.8,1,null,null,1,1:2:espresso#3,1:2:espresso#3,null,a 20% discount on every two Espresso(only big size)(basic-price)
+0,0,1,1.0,1,null,null,1,1:3:redTea#1#2#3&greenTea#1#2#3,1:3:redTea#1#2#3&greenTea#1#2#3,null,a free drink for every 3 cups of either red tea or green tea(basic-price)
+0,0,2,0.5,1,null,null,1,1:2:cappuccino#1#2#3,1:1:cappuccino#1#2#3,null,every two Cappucino，the second cup of half-price(basic-price)
+1,0,0,30,1,null,null,0,null,0:100:null,null,subtract 30 from every 100 for the whole order(whole-price)
+2,0,2,0.5,1,2019-11-11 00:00:00 CST,2019-11-11 23:59:59 CST,0,null,null,null,50% off for all goods on 11/11(whole-price)
+3,0,2,0.85,1,null,null,0,1:1:redTea#1#2#3&greenTea#1#2#3@1:1:cappuccino#1#2#3&espresso#1#2#3,null,null,when buying at least one cup of tea and one cup of coffee，15% off for your order(whole-price)
