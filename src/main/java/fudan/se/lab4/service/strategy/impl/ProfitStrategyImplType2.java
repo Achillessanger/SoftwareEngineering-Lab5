@@ -1,5 +1,6 @@
 package fudan.se.lab4.service.strategy.impl;
 
+import fudan.se.lab4.context.EnvironmentContext;
 import fudan.se.lab4.context.RuleContext;
 import fudan.se.lab4.dto.Order;
 import fudan.se.lab4.dto.OrderItem;
@@ -9,6 +10,8 @@ import fudan.se.lab4.entity.Drinks;
 import fudan.se.lab4.repository.DrinkRepository;
 import fudan.se.lab4.repository.impl.DrinkRepositoryImpl;
 import fudan.se.lab4.repository.impl.RuleRepositoryImpl;
+import fudan.se.lab4.service.PriceService;
+import fudan.se.lab4.service.impl.PriceServiceImpl;
 import fudan.se.lab4.service.strategy.ProfitStrategy;
 
 import java.text.NumberFormat;
@@ -16,7 +19,7 @@ import java.util.*;
 
 public class ProfitStrategyImplType2 implements ProfitStrategy {
     NumberFormat nf = NumberFormat.getNumberInstance();
-
+    private PriceService priceService = new PriceServiceImpl();
     public RuleResult profitProcess(RuleContext ruleContext, Rule rule, int max) {
         //TODO 相当于原来的RuleServiceImpl.java里的private RuleResult discountType2(RuleContext ruleContext, Rule rule)打折
         nf.setMaximumFractionDigits(2);
@@ -66,7 +69,7 @@ public class ProfitStrategyImplType2 implements ProfitStrategy {
                         for (Drinks drinks : processObject.getDrinksList()) {
                             if (rule.getIsOnlyBasicsDrinks() == 1) {
                                 if (drinkNum.containsKey(drinks.getName() + "#" + drinks.getSize())) {
-                                    discount += drinks.getPrice() * drinkNum.get(drinks.getName() + "#" + drinks.getSize()) * (1 - rule.getProfit());
+                                    discount += priceService.charge(drinks.getPrice(), EnvironmentContext.getEnvironmentContext().getCurrencyNow()) * drinkNum.get(drinks.getName() + "#" + drinks.getSize()) * (1 - rule.getProfit());
                                 }
 
                             }
@@ -96,10 +99,10 @@ public class ProfitStrategyImplType2 implements ProfitStrategy {
                             if (remain > 0) {
                                 if (require.containsKey(drinks.getName() + "#" + drinks.getSize())) {
                                     if (require.get(drinks.getName() + "#" + drinks.getSize()) - remain > 0) {
-                                        discount += drinks.getPrice() * remain * (1 - rule.getProfit());
+                                        discount += priceService.charge(drinks.getPrice(),EnvironmentContext.getEnvironmentContext().getCurrencyNow()) * remain * (1 - rule.getProfit());
                                         break;
                                     } else {
-                                        discount += drinks.getPrice() * require.get(drinks.getName() + "#" + drinks.getSize()) * (1 - rule.getProfit());
+                                        discount += priceService.charge(drinks.getPrice(),EnvironmentContext.getEnvironmentContext().getCurrencyNow()) * require.get(drinks.getName() + "#" + drinks.getSize()) * (1 - rule.getProfit());
                                         remain -= require.get(drinks.getName() + "#" + drinks.getSize());
                                     }
                                 }

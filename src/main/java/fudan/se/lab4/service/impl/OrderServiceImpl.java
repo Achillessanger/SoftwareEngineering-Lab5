@@ -1,6 +1,5 @@
 package fudan.se.lab4.service.impl;
 
-import fudan.se.lab4.context.EnvironmentContext;
 import fudan.se.lab4.dto.*;
 import fudan.se.lab4.service.CalWholeDrinkService;
 import fudan.se.lab4.service.OrderService;
@@ -15,8 +14,7 @@ import java.util.List;
 public class OrderServiceImpl implements OrderService {
     private static Logger logger = LoggerFactory.getLogger(OrderServiceImpl.class);
     private CalWholeDrinkService calWholeDrinkService = new CalWholeDrinkServiceImpl();
-    private PriceServiceImpl priceService = new PriceServiceImpl();
-    private EnvironmentContext environmentContext = EnvironmentContext.getEnvironmentContext();
+
     @Override
     public PaymentInfo pay(Order order) {
         double price = getPaymentInfoPrice(order);

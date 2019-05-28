@@ -7,8 +7,10 @@ import fudan.se.lab4.entity.Rule;
 import fudan.se.lab4.entity.Drinks;
 import fudan.se.lab4.repository.impl.RuleRepositoryImpl;
 import fudan.se.lab4.service.LoggerService;
+import fudan.se.lab4.service.PriceService;
 import fudan.se.lab4.service.impl.LoggerServiceImpl;
 import fudan.se.lab4.service.impl.OrderServiceImpl;
+import fudan.se.lab4.service.impl.PriceServiceImpl;
 import fudan.se.lab4.service.strategy.TargetStrategy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,6 +21,7 @@ import java.util.List;
 public class TargetStrategyImpl implements TargetStrategy {
     private static Logger logger = LoggerFactory.getLogger(OrderServiceImpl.class);
     private LoggerService loggerService = new LoggerServiceImpl();
+    private PriceService priceService = new PriceServiceImpl();
 
     public int isValid(RuleContext ruleContext, Rule rule) {
         if (rule.getFrom() == null && rule.getOrderCondition() == null)

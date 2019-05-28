@@ -1,5 +1,6 @@
 package fudan.se.lab4.service.strategy.impl;
 
+import fudan.se.lab4.context.EnvironmentContext;
 import fudan.se.lab4.context.RuleContext;
 import fudan.se.lab4.dto.Order;
 import fudan.se.lab4.dto.OrderItem;
@@ -9,11 +10,14 @@ import fudan.se.lab4.entity.Drinks;
 import fudan.se.lab4.repository.DrinkRepository;
 import fudan.se.lab4.repository.impl.DrinkRepositoryImpl;
 import fudan.se.lab4.repository.impl.RuleRepositoryImpl;
+import fudan.se.lab4.service.PriceService;
+import fudan.se.lab4.service.impl.PriceServiceImpl;
 import fudan.se.lab4.service.strategy.ProfitStrategy;
 
 import java.util.*;
 
 public class ProfitStrategyImplType1 implements ProfitStrategy {
+    private PriceService priceService = new PriceServiceImpl();
     public RuleResult profitProcess(RuleContext ruleContext, Rule rule, int max) {
         //TODO 相当于原来的RuleServiceImpl.java里的private RuleResult discountType1(RuleContext ruleContext, Rule rule) 满赠
         String description = "";
@@ -110,11 +114,11 @@ public class ProfitStrategyImplType1 implements ProfitStrategy {
                         break;
                     }
                     if (mapping.getValue() - max > 0) {
-                        discount += max * drinkUtil.getDrink(mapping.getKey().split("#")[0]).getPrice();
+                        discount += max * priceService.charge(drinkUtil.getDrink(mapping.getKey().split("#")[0]).getPrice(), EnvironmentContext.getEnvironmentContext().getCurrencyNow());
                         // sendDrinks.put(mapping.getKey(), max);
                         break;
                     } else {
-                        discount += mapping.getValue() * drinkUtil.getDrink(mapping.getKey().split("#")[0]).getPrice();
+                        discount += mapping.getValue() * priceService.charge(drinkUtil.getDrink(mapping.getKey().split("#")[0]).getPrice(),EnvironmentContext.getEnvironmentContext().getCurrencyNow());
                         ;
                         //    sendDrinks.put(mapping.getKey(), max);
                         max = max - mapping.getValue();
