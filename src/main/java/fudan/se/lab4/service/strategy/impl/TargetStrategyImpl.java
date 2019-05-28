@@ -64,13 +64,13 @@ public class TargetStrategyImpl implements TargetStrategy {
 
     private int isDrinksNumValid(Order order, List<Drinks> drinksList, double number, boolean canAdd) {
         if (drinksList == null) {
-            return order.getOrderItems().size() >= (int) number ? (canAdd ? order.getOrderItems().size() / (int) number : 1) : -1;
+            return (order.getOrderItems().size() >= (int) number + 1) ? (canAdd ? order.getOrderItems().size() / ((int) number + 1) : 1) : -1;
         }
         int realNumber = 0;
         for (OrderItem orderItem : order.getOrderItems()) {
             realNumber += contain(drinksList, orderItem) ? 1 : 0;
         }
-        return realNumber >= (int) number ? (canAdd ? realNumber / (int) number : 1) : -1;
+        return realNumber >= (int) number + 1 ? (canAdd ? realNumber / ((int) number + 1) : 1) : -1;
     }
 
     private int min(int x, int y) {
