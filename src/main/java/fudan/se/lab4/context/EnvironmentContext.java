@@ -14,9 +14,9 @@ public class EnvironmentContext {
     private ArrayList<String[]> specialDrinks=new ArrayList<>();
     private static final EnvironmentContext environmentContext = new EnvironmentContext();
     private List<Rule> rules;
-    private EnvironmentContext(){
+    private EnvironmentContext() {
         String money=bundle.getString("CURRENCY");
-        String[] curArray=money.split(";");
+        String[] curArray=money.split("[;]");
         for (String key:curArray) {
             String[] array=key.split("_");
             currencies.add(new Currency(array[2],array[0],Double.parseDouble(array[1])));
