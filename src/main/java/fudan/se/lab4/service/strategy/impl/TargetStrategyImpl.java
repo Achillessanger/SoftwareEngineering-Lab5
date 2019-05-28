@@ -31,7 +31,7 @@ public class TargetStrategyImpl implements TargetStrategy {
 
     private int isTimeValid(Date current, Date from, Date to) {
         if (from != null && to != null) {
-            return (current == from || (current.after(from) && current.before(to))) ? 1 : -1;
+            return (current == from || current == to || (current.after(from) && current.before(to))) ? 1 : -1;
         }
         return Integer.MAX_VALUE;
     }
