@@ -1,5 +1,6 @@
 package fudan.se.lab4;
 
+import fudan.se.lab4.context.EnvironmentContext;
 import fudan.se.lab4.dto.Ingredient;
 import fudan.se.lab4.dto.Order;
 import fudan.se.lab4.dto.OrderItem;
@@ -24,6 +25,7 @@ import static org.junit.Assert.assertTrue;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class OrderServiceTests {
+    private final String RULE_DES = "RULE_DES_";
     private OrderServiceImpl orderService;
     private PaymentInfo paymentInfo;
     private List<String> EMPTYMSGS = new ArrayList<>();
@@ -380,7 +382,7 @@ public class OrderServiceTests {
         assertTrue(paymentInfoEquals(paymentInfo, new PaymentInfo(48, 0, 48, msgs)));
 
         //3.
-        msgs.add("a 20% discount on every two Espresso(only big size)(basic-price)");
+        msgs.add(EnvironmentContext.getEnvironmentContext().getBundle().getString(RULE_DES + 1));
         orderItems.remove(1);
         List<Ingredient> ingredients3 = new ArrayList<>();
         ingredients3.add(new Ingredient("cream", 1));
@@ -401,7 +403,7 @@ public class OrderServiceTests {
         //2.一小杯加一大杯
         //3.两个小杯，其中一个加入配料
         //4.三杯
-        //5.四大杯
+        //5.四小杯
 
         List<OrderItem> orderItems = new ArrayList<>();
         List<String> msgs = new ArrayList<>();
@@ -411,7 +413,7 @@ public class OrderServiceTests {
         paymentInfo = orderService.pay(new Order("1", orderItems));
         assertTrue(paymentInfoEquals(paymentInfo, new PaymentInfo(24, 0, 24, msgs)));
 
-        msgs.add("every two Cappuccino，the second cup of half-price(basic-price)");
+        msgs.add(EnvironmentContext.getEnvironmentContext().getBundle().getString(RULE_DES + 3));
         //2.
         orderItems.add(new OrderItem("cappuccino", new ArrayList<>(), 3));
         paymentInfo = orderService.pay(new Order("2", orderItems));
@@ -461,7 +463,7 @@ public class OrderServiceTests {
         paymentInfo = orderService.pay(new Order("1", orderItems));
         assertTrue(paymentInfoEquals(paymentInfo, new PaymentInfo(60, 0, 60, msgs)));
 
-        msgs.add("a free drink for every 3 cups of either red tea or green tea(basic-price)");
+        msgs.add(EnvironmentContext.getEnvironmentContext().getBundle().getString(RULE_DES + 2));
         //4.
         orderItems.add(new OrderItem("redTea", new ArrayList<>(), 3));
         paymentInfo = orderService.pay(new Order("4", orderItems));
@@ -494,7 +496,7 @@ public class OrderServiceTests {
         //1.4杯小杯绿茶
         List<OrderItem> orderItems = new ArrayList<>();
         List<String> msgs = new ArrayList<>();
-        msgs.add("a free drink for every 3 cups of either red tea or green tea(basic-price)");
+        msgs.add(EnvironmentContext.getEnvironmentContext().getBundle().getString(RULE_DES + 2));
         for (int i = 0; i < 4; i++) {
             orderItems.add(new OrderItem("greenTea", new ArrayList<>(), 1));
         }
@@ -510,7 +512,7 @@ public class OrderServiceTests {
         //3.满减，九杯茶，一杯红茶
         List<OrderItem> orderItems = new ArrayList<>();
         List<String> msgs = new ArrayList<>();
-        msgs.add("a free drink for every 3 cups of either red tea or green tea(basic-price)");
+        msgs.add(EnvironmentContext.getEnvironmentContext().getBundle().getString(RULE_DES + 2));
 
         //1.
         for (int i = 0; i < 7; i++) {
@@ -548,7 +550,7 @@ public class OrderServiceTests {
         paymentInfo = orderService.pay(new Order("1", orderItems));
         assertTrue(paymentInfoEquals(paymentInfo, new PaymentInfo(22, 0, 22, msgs)));
 
-        msgs.add("subtract 30 from every 100 for the whole order(whole-price)");
+        msgs.add(EnvironmentContext.getEnvironmentContext().getBundle().getString(RULE_DES + 4));
         //2.
         orderItems.add(new OrderItem("espresso", new ArrayList<>(), 2));
         for (int i = 0; i < 3; i++) {
@@ -580,8 +582,8 @@ public class OrderServiceTests {
         int i = 0;
 
         //1.
-        msgs.add("a 20% discount on every two Espresso(only big size)(basic-price)");
-        msgs.add("every two Cappuccino，the second cup of half-price(basic-price)");
+        msgs.add(EnvironmentContext.getEnvironmentContext().getBundle().getString(RULE_DES+1));
+        msgs.add(EnvironmentContext.getEnvironmentContext().getBundle().getString(RULE_DES+3));
         for (; i < 2; i++) {
             orderItems.add(new OrderItem("espresso", new ArrayList<>(), 3));
         }
@@ -593,8 +595,8 @@ public class OrderServiceTests {
 
         //2.
         msgs.clear();
-        msgs.add("a free drink for every 3 cups of either red tea or green tea(basic-price)");
-        msgs.add("every two Cappuccino，the second cup of half-price(basic-price)");
+        msgs.add(EnvironmentContext.getEnvironmentContext().getBundle().getString(RULE_DES+2));
+        msgs.add(EnvironmentContext.getEnvironmentContext().getBundle().getString(RULE_DES+3));
         orderItems.clear();
         for (i = 0; i < 8; i++) {
             orderItems.add(new OrderItem("greenTea", new ArrayList<>(), 1));
@@ -607,8 +609,8 @@ public class OrderServiceTests {
 
         //3.
         msgs.clear();
-        msgs.add("a 20% discount on every two Espresso(only big size)(basic-price)");
-        msgs.add("a free drink for every 3 cups of either red tea or green tea(basic-price)");
+        msgs.add(EnvironmentContext.getEnvironmentContext().getBundle().getString(RULE_DES+1));
+        msgs.add(EnvironmentContext.getEnvironmentContext().getBundle().getString(RULE_DES+2));
         orderItems.clear();
         for (i = 0; i < 8; i++) {
             orderItems.add(new OrderItem("greenTea", new ArrayList<>(), 1));
@@ -622,9 +624,9 @@ public class OrderServiceTests {
         //4.
         orderItems.clear();
         msgs.clear();
-        msgs.add("a 20% discount on every two Espresso(only big size)(basic-price)");
-        msgs.add("a free drink for every 3 cups of either red tea or green tea(basic-price)");
-        msgs.add("every two Cappuccino，the second cup of half-price(basic-price)");
+        msgs.add(EnvironmentContext.getEnvironmentContext().getBundle().getString(RULE_DES+1));
+        msgs.add(EnvironmentContext.getEnvironmentContext().getBundle().getString(RULE_DES+2));
+        msgs.add(EnvironmentContext.getEnvironmentContext().getBundle().getString(RULE_DES+3));
         for (i = 0; i < 2; i++) {
             orderItems.add(new OrderItem("espresso", new ArrayList<>(), 3));
         }
@@ -649,7 +651,7 @@ public class OrderServiceTests {
         List<String> msgs = new ArrayList<>();
 
         //1.
-        msgs.add("subtract 30 from every 100 for the whole order(whole-price)");
+        msgs.add(EnvironmentContext.getEnvironmentContext().getBundle().getString(RULE_DES+4));
         for (int i = 0; i < 5; i++) {
             orderItems.add(new OrderItem("redTea", new ArrayList<>(), 1));
         }
@@ -659,7 +661,7 @@ public class OrderServiceTests {
         //2.
         orderItems.clear();
         msgs.clear();
-        msgs.add("a free drink for every 3 cups of either red tea or green tea(basic-price)");
+        msgs.add(EnvironmentContext.getEnvironmentContext().getBundle().getString(RULE_DES+2));
         for (int i = 0; i < 7; i++) {
             orderItems.add(new OrderItem("greenTea", new ArrayList<>(), 1));
         }
@@ -670,8 +672,8 @@ public class OrderServiceTests {
         //3.
         orderItems.clear();
         msgs.clear();
-        msgs.add("a 20% discount on every two Espresso(only big size)(basic-price)");
-        msgs.add("every two Cappuccino，the second cup of half-price(basic-price)");
+        msgs.add(EnvironmentContext.getEnvironmentContext().getBundle().getString(RULE_DES+1));
+        msgs.add(EnvironmentContext.getEnvironmentContext().getBundle().getString(RULE_DES+3));
         for (int i = 0; i < 4; i++) {
             orderItems.add(new OrderItem("cappuccino", new ArrayList<>(), 1));
         }
@@ -682,7 +684,7 @@ public class OrderServiceTests {
         paymentInfo = orderService.pay(new Order("3", orderItems));
         assertTrue(paymentInfoEquals(paymentInfo, new PaymentInfo(148, 30, 118, msgs)));
     }
-    
+
     @Test
     public void testTime() {
         List<OrderItem> orderItems = new ArrayList<>();
@@ -694,9 +696,10 @@ public class OrderServiceTests {
 
     //todo 测试满足时间11-11
     @Test
-    public void testTimeCorrect(){
+    public void testTimeCorrect() {
         List<OrderItem> orderItems = new ArrayList<>();
         List<String> msgs = new ArrayList<>();
+        msgs.add(EnvironmentContext.getEnvironmentContext().getBundle().getString(RULE_DES+5));
         orderItems.add(new OrderItem("espresso", new ArrayList<>(), 3));
         paymentInfo = orderService.pay(new Order("1", orderItems));
         assertTrue(paymentInfoEquals(paymentInfo, new PaymentInfo(26, 13, 13, msgs)));
@@ -707,7 +710,7 @@ public class OrderServiceTests {
     public void testTeaAndCoffee() {
         List<OrderItem> orderItems = new ArrayList<>();
         List<String> msgs = new ArrayList<>();
-        msgs.add("when buying at least one cup of tea and one cup of coffee，15% off for your order(whole-price)");
+        msgs.add(EnvironmentContext.getEnvironmentContext().getBundle().getString(RULE_DES+6));
         orderItems.add(new OrderItem("greenTea", new ArrayList<>(), 1));
         orderItems.add(new OrderItem("espresso", new ArrayList<>(), 1));
         paymentInfo = orderService.pay(new Order("tea&coffee", orderItems));
