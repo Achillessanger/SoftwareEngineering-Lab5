@@ -21,7 +21,6 @@ import java.util.List;
 public class TargetStrategyImpl implements TargetStrategy {
     private static Logger logger = LoggerFactory.getLogger(OrderServiceImpl.class);
     private LoggerService loggerService = new LoggerServiceImpl();
-    private PriceService priceService = new PriceServiceImpl();
 
     public int isValid(RuleContext ruleContext, Rule rule) {
         if (rule.getFrom() == null && rule.getOrderCondition() == null)
