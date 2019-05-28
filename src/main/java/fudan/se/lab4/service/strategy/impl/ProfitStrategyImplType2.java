@@ -20,6 +20,7 @@ import java.util.*;
 public class ProfitStrategyImplType2 implements ProfitStrategy {
     NumberFormat nf = NumberFormat.getNumberInstance();
     private PriceService priceService = new PriceServiceImpl();
+
     public RuleResult profitProcess(RuleContext ruleContext, Rule rule, int max) {
         //TODO 相当于原来的RuleServiceImpl.java里的private RuleResult discountType2(RuleContext ruleContext, Rule rule)打折
         nf.setMaximumFractionDigits(2);
@@ -32,7 +33,7 @@ public class ProfitStrategyImplType2 implements ProfitStrategy {
         } else {
             //对某些特定商品打折
             List<RuleRepositoryImpl.Item> condition = rule.getDiscountRange();
-////            int[] num = new int[condition.size()];
+//            int[] num = new int[condition.size()];
 //            //先记录订单中出现的所有饮品的数量
             Map<String, Integer> drinkNum = new HashMap<>();
             for (OrderItem orderItem : order.getOrderItems()) {
@@ -60,24 +61,26 @@ public class ProfitStrategyImplType2 implements ProfitStrategy {
 //                    max = temp;
 //                }
             }
-            //开始打折
-            List<RuleRepositoryImpl.Item> discountRange = rule.getDiscountRange();
-            for (RuleRepositoryImpl.Item processObject : discountRange) {
-                if (processObject.getRequiretType() == 0) {
-                    //表示对drinklist里面的所有饮品打折
-                    if (processObject.getNumber() == 0) {
-                        for (Drinks drinks : processObject.getDrinksList()) {
-                            if (rule.getIsOnlyBasicsDrinks() == 1) {
-                                if (drinkNum.containsKey(drinks.getName() + "#" + drinks.getSize())) {
-                                    discount += priceService.charge(drinks.getPrice(), EnvironmentContext.getEnvironmentContext().getCurrencyNow()) * drinkNum.get(drinks.getName() + "#" + drinks.getSize()) * (1 - rule.getProfit());
-                                }
+            if (rule.getFreeDrinks() == null) {
 
+                //开始打折
+                List<RuleRepositoryImpl.Item> discountRange = rule.getDiscountRange();
+                for (RuleRepositoryImpl.Item processObject : discountRange) {
+                    if (processObject.getRequiretType() == 0) {
+                        //表示对drinklist里面的所有饮品打折
+                        if (processObject.getNumber() == 0) {
+                            for (Drinks drinks : processObject.getDrinksList()) {
+                                if (rule.getIsOnlyBasicsDrinks() == 1) {
+                                    if (drinkNum.containsKey(drinks.getName() + "#" + drinks.getSize())) {
+                                        discount += priceService.charge(drinks.getPrice(), EnvironmentContext.getEnvironmentContext().getCurrencyNow()) * drinkNum.get(drinks.getName() + "#" + drinks.getSize()) * (1 - rule.getProfit());
+                                    }
+
+                                }
                             }
                         }
-                    }
-                } else {
-                    //最多打折几杯
-                    //默认按照基础价格从高到低的给 此处就不手动排序了
+                    } else {
+                        //最多打折几杯
+                        //默认按照基础价格从高到低的给 此处就不手动排序了
 //                    List<Map.Entry<String, Integer>> sortList = new ArrayList<Map.Entry<String, Integer>>(require.entrySet());
 //                    Collections.sort(sortList, new Comparator<Map.Entry<String, Integer>>() {
 //                        @Override
@@ -89,29 +92,29 @@ public class ProfitStrategyImplType2 implements ProfitStrategy {
 //                        }
 //                    });
 //
-                    int remain = (int) (max * processObject.getNumber());
-                    for (Drinks drinks : processObject.getDrinksList()) {
+                        int remain = (int) (max * processObject.getNumber());
+                        for (Drinks drinks : processObject.getDrinksList()) {
 //                        int remain = (int)(max*processObject.getNumber());
-                        if (rule.getIsOnlyBasicsDrinks() == 1) {
+                            if (rule.getIsOnlyBasicsDrinks() == 1) {
 //                                if(drinkNum.get(drinks)!=null){
 //                                    discount += drinks.getPrice() * drinkNum.get(drinks) * (1 - rule.getProfit());
 //                                }
-                            if (remain > 0) {
-                                if (require.containsKey(drinks.getName() + "#" + drinks.getSize())) {
-                                    if (require.get(drinks.getName() + "#" + drinks.getSize()) - remain > 0) {
-                                        discount += priceService.charge(drinks.getPrice(),EnvironmentContext.getEnvironmentContext().getCurrencyNow()) * remain * (1 - rule.getProfit());
-                                        break;
-                                    } else {
-                                        discount += priceService.charge(drinks.getPrice(),EnvironmentContext.getEnvironmentContext().getCurrencyNow()) * require.get(drinks.getName() + "#" + drinks.getSize()) * (1 - rule.getProfit());
-                                        remain -= require.get(drinks.getName() + "#" + drinks.getSize());
+                                if (remain > 0) {
+                                    if (require.containsKey(drinks.getName() + "#" + drinks.getSize())) {
+                                        if (require.get(drinks.getName() + "#" + drinks.getSize()) - remain > 0) {
+                                            discount += priceService.charge(drinks.getPrice(), EnvironmentContext.getEnvironmentContext().getCurrencyNow()) * remain * (1 - rule.getProfit());
+                                            break;
+                                        } else {
+                                            discount += priceService.charge(drinks.getPrice(), EnvironmentContext.getEnvironmentContext().getCurrencyNow()) * require.get(drinks.getName() + "#" + drinks.getSize()) * (1 - rule.getProfit());
+                                            remain -= require.get(drinks.getName() + "#" + drinks.getSize());
+                                        }
                                     }
+
+                                } else {
+                                    break;
                                 }
 
-                            } else {
-                                break;
                             }
-
-                        }
 //                        else {
 //
 //                            if (rule.isCanAdd()) {
@@ -136,9 +139,10 @@ public class ProfitStrategyImplType2 implements ProfitStrategy {
 //                                }
 //                            }
 //                        }
+                        }
                     }
-                }
 
+                }
             }
         }
 
