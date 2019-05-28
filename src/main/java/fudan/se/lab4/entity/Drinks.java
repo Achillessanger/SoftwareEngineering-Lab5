@@ -1,15 +1,18 @@
 package fudan.se.lab4.entity;
 
+import fudan.se.lab4.context.EnvironmentContext;
+import fudan.se.lab4.service.PriceService;
+import fudan.se.lab4.service.impl.PriceServiceImpl;
+
 import java.util.List;
 
 public class Drinks {
+    private PriceService priceService = new PriceServiceImpl();
     private String name;
     private String description;
     private double price;
     private int size;
     private List<Double> costOfSize;
-
-
 
     public String getName() {
         return name;
@@ -21,7 +24,7 @@ public class Drinks {
         return description;
     }
     public double getPrice() {
-        return price;
+        return priceService.charge(price, EnvironmentContext.getEnvironmentContext().getCurrencyNow());
     }
     public List<Double> getCostOfSize() {
         return costOfSize;
@@ -39,9 +42,7 @@ public class Drinks {
     public void setPrice(double price) {
         this.price = price;
     }
-    public void setSizeInSaleRule(int size){
-        this.size = size;
-    }
+
     public void setCostOfSize(List<Double> costOfSize) {
         this.costOfSize = costOfSize;
     }
@@ -49,7 +50,7 @@ public class Drinks {
         return priceOfSize() + getPrice();
     }
     public double priceOfSize() {
-        return costOfSize.get(this.size-1);
+        return priceService.charge(costOfSize.get(this.size-1),EnvironmentContext.getEnvironmentContext().getCurrencyNow());
     }
 
 }
