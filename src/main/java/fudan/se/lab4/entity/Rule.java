@@ -22,7 +22,9 @@ public class Rule {
     private List<RuleRepositoryImpl.Item> freeDrinks; //如果送饮料，送的类型/数量 不送的优惠为null
     private String descirption;
 
+    public Rule(){
 
+    }
     public Rule(int groupId,int scope,int profitType,double profit, boolean canAdd, Date from, Date to, int isOnlyBasicsDrinks, List<RuleRepositoryImpl.Item> orderCondition, List<RuleRepositoryImpl.Item> discountRange, List<RuleRepositoryImpl.Item> freeDrinks, String descirption) {
         this.groupId = groupId;
         this.scope = scope;
