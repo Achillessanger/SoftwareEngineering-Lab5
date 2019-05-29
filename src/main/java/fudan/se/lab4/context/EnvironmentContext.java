@@ -43,9 +43,11 @@ public class EnvironmentContext {
         String[] rulePathArr = rulePaths.split(";");
         for(int i = 0; i < rulePathArr.length; i++){
             try {
-                Class clazz = null;
+                Class clazz;
                 if(i == 0){
                    clazz = Class.forName("fudan.se.lab4.repository.impl.RuleRepositoryImpl");
+                }else {
+                    clazz = Class.forName("fudan.se.lab4.repository.impl.RuleRepositoryImpl"+i);
                 }
                 RuleRepository ruleRepository = (RuleRepository) clazz.newInstance();
                 this.rules = ruleRepository.getRulesFromCSV(rulePathArr[i],bundle,this.rules);
