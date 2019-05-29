@@ -32,6 +32,7 @@ public class OrderServiceTests {
     private PaymentInfo paymentInfo;
     private List<String> EMPTYMSGS = new ArrayList<>();
     private LoggerService loggerService = new LoggerServiceImpl();
+    private PriceService priceService = new PriceServiceImpl();
 
     @Rule
     public ExpectedException thrown = ExpectedException.none();
@@ -39,7 +40,6 @@ public class OrderServiceTests {
     @Before
     public void setUp() {
         orderService = new OrderServiceImpl();
-        PriceService priceService = new PriceServiceImpl();
         priceService.changeCurrentCurrency("RMB");
     }
 
@@ -724,10 +724,18 @@ public class OrderServiceTests {
         assertTrue(paymentInfoEquals(paymentInfo, new PaymentInfo(80, 12, 68, msgs)));
     }
 
+    //测试切换成当前店铺地区不支持的币种
+    @Test
+    public void testSetCurrencyWrong(){
+        thrown.expect(RuntimeException.class);
+        thrown.expectMessage(loggerService.log("CURRENCY_NOT_SUPPORT"));
+        priceService.changeCurrentCurrency("THB"); //不支持泰铢
+
+    }
+
     //测试港币
     @Test
     public void testHDK(){
-        PriceService priceService = new PriceServiceImpl();
         priceService.changeCurrentCurrency("HDK");
         List<OrderItem> orderItems = new ArrayList<>();
         //测试单饮料价格

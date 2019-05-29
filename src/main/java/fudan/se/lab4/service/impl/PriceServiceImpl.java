@@ -21,6 +21,6 @@ public class PriceServiceImpl implements PriceService {
             }
         }
         logger.info(loggerService.log("CURRENCY_NOT_SUPPORT"));
-
+        throw new RuntimeException(loggerService.log("CURRENCY_NOT_SUPPORT"));
     }
 }
