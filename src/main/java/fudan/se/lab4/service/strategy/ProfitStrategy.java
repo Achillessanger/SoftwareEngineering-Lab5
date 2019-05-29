@@ -16,27 +16,4 @@ public interface ProfitStrategy {
      * @return RuleResult对象
      */
     RuleResult profitProcess(RuleContext ruleContext, Rule rule,int valid);
-
-    static RuleRepositoryImpl.Item range2Condition(Rule rule, RuleRepositoryImpl.Item processObject){
-        for(RuleRepositoryImpl.Item require : rule.getOrderCondition()){
-            boolean ifFind = false;
-            for(Drinks drink:processObject.getDrinksList()){
-                if(contains(drink,require.getDrinksList()))
-                    ifFind = true;
-                else
-                    ifFind = false;
-            }
-            if(ifFind)
-                return require;
-        }
-        return null;
-    }
-    static boolean contains(Drinks drink, List<Drinks> list){
-        for(Drinks drink1 : list){
-            if(drink1.getName().equals(drink.getName()) && drink1.getSize() == drink1.getSize())
-                return true;
-        }
-        return false;
-    }
-
 }
