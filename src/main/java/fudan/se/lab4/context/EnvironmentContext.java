@@ -4,6 +4,7 @@ import fudan.se.lab4.constant.FileConstant;
 import fudan.se.lab4.currency.Currency;
 import fudan.se.lab4.entity.Drinks;
 import fudan.se.lab4.entity.Rule;
+import fudan.se.lab4.repository.DrinkRepository;
 import fudan.se.lab4.repository.RuleRepository;
 import fudan.se.lab4.repository.impl.RuleRepositoryImpl;
 
@@ -14,7 +15,7 @@ public class EnvironmentContext {
     private ArrayList<Currency> currencies=new ArrayList<>();
     private ArrayList<String[]> specialDrinks=new ArrayList<>();
     private static final EnvironmentContext environmentContext = new EnvironmentContext();
-    private List<Rule> rules;
+    private List<Rule> rules = new ArrayList<>();
     private Currency currencyNow;
     private EnvironmentContext(){
         String money;
@@ -38,8 +39,24 @@ public class EnvironmentContext {
             }
         }
 
-        RuleRepository ruleRepository = new RuleRepositoryImpl();
-        this.rules = ruleRepository.getRulesFromCSV(FileConstant.SALESRULES_CSV,bundle);
+        String rulePaths = bundle.getString("RULE_PATH");
+        String[] rulePathArr = rulePaths.split(";");
+        for(int i = 0; i < rulePathArr.length; i++){
+            try {
+                Class clazz = null;
+                if(i == 0){
+                   clazz = Class.forName("fudan.se.lab4.repository.impl.RuleRepositoryImpl");
+                }
+                RuleRepository ruleRepository = (RuleRepository) clazz.newInstance();
+                this.rules = ruleRepository.getRulesFromCSV(rulePathArr[i],bundle,this.rules);
+
+            }catch (Exception e){
+                throw new RuntimeException(bundle.getString("INIT_FAILED"));
+            }
+        }
+//
+//        RuleRepository ruleRepository = new RuleRepositoryImpl();
+//        this.rules = ruleRepository.getRulesFromCSV(FileConstant.SALESRULES_CSV,bundle);
     }
     public static EnvironmentContext getEnvironmentContext(){
         return environmentContext;

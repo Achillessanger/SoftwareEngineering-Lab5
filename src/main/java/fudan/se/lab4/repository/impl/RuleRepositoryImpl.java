@@ -36,16 +36,16 @@ public class RuleRepositoryImpl implements RuleRepository {
         }
     }
 
-    public List<Rule> getRulesFromCSV(String dataFilePath,ResourceBundle bundle){
+    public List<Rule> getRulesFromCSV(String dataFilePath,ResourceBundle bundle,List<Rule> rules){
         CsvReader reader;
-        List<Rule> ret = new ArrayList<>();
+//        List<Rule> ret = new ArrayList<>();
         try {
             reader = new CsvReader(dataFilePath, FileConstant.CSV_SEPARATOR, Charset.forName(FileConstant.CHARSET));
             while (reader.readRecord()) {
                 String[] item = reader.getValues();
-                ret.add(getRule(item,bundle));
+                rules.add(getRule(item,bundle));
             }
-            return ret;
+            return rules;
         } catch (IOException e) {
             throw new RuntimeException(e.getMessage());
         }

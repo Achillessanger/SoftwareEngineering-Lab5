@@ -10,10 +10,7 @@ import fudan.se.lab4.service.PriceService;
 import fudan.se.lab4.service.impl.LoggerServiceImpl;
 import fudan.se.lab4.service.impl.OrderServiceImpl;
 import fudan.se.lab4.service.impl.PriceServiceImpl;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
+import org.junit.*;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -730,7 +727,6 @@ public class OrderServiceTests {
         thrown.expect(RuntimeException.class);
         thrown.expectMessage(loggerService.log("CURRENCY_NOT_SUPPORT"));
         priceService.changeCurrentCurrency("THB"); //不支持泰铢
-
     }
 
     //测试港币
