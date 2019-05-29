@@ -39,6 +39,8 @@ public class OrderServiceTests {
     @Before
     public void setUp() {
         orderService = new OrderServiceImpl();
+        PriceService priceService = new PriceServiceImpl();
+        priceService.changeCurrentCurrency("RMB");
     }
 
     @After
