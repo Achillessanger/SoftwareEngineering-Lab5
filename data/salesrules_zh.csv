@@ -1,6 +1,0 @@
-0,0,2,0.8,1,null,null,1,1:2:espresso#3,1:2:espresso#3,null,大杯速溶咖啡 2杯8折(基础价格)可叠加
-0,0,1,1.0,1,null,null,1,1:3:redTea#1#2#3&greenTea#1#2#3,1:3:redTea#1#2#3&greenTea#1#2#3,null,红/绿茶买3送1(基础价格)可叠加
-0,0,2,0.5,1,null,null,1,1:2:cappuccino#1#2#3,1:1:cappuccino#1#2#3,null,卡布奇诺第二杯半价(基础价格)可叠加
-1,0,0,30,1,null,null,0,null,0:100:null,null,所有商品满100¥减30¥可叠加
-2,0,2,0.5,1,2019-11-11 00:00:00 CST,2019-11-11 23:59:59 CST,0,null,null,null,11月11日全部商品总价打5折
-3,0,2,0.85,1,null,null,0,1:1:redTea#1#2#3&greenTea#1#2#3@1:1:cappuccino#1#2#3&espresso#1#2#3,null,null,购买至少一件茶类或咖啡类时，订单总价打8.5折
