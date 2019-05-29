@@ -15,8 +15,6 @@ public class EnvironmentContext {
     private ArrayList<String[]> specialDrinks=new ArrayList<>();
     private static final EnvironmentContext environmentContext = new EnvironmentContext();
     private List<Rule> rules;
-    String money=bundle.getString("CURRENCY");
-    String[] curArray=money.split("[;]");
     private Currency currencyNow;
     private EnvironmentContext(){
         String money;
