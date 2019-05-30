@@ -769,7 +769,7 @@ public class OrderServiceTests {
         paymentInfo = orderService.pay(new Order("2", orderItems));
         assertTrue(paymentInfoEquals(paymentInfo, new PaymentInfo(66.25, 13.75, 52.5, msgs)));
 
-        //4杯小红茶-基础价格买增测试
+        //4杯小绿茶-基础价格买增测试
         msgs = new ArrayList<>();
         orderItems = new ArrayList<>();
         msgs.add(EnvironmentContext.getEnvironmentContext().getBundle().getString(RULE_DES + 2));
