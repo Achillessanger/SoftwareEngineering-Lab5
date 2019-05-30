@@ -58,14 +58,34 @@ public class RuleRepositoryImpl implements RuleRepository {
             int profitType = Integer.parseInt(item[2]);
             double profit = Double.parseDouble(item[3]);
             boolean canAdd = (item[4].equals("1"))?true:false;
-            DateFormat df = new SimpleDateFormat("yyyy-MM-dd kk:mm:ss z", Locale.ENGLISH);
-            Date from = (item[5].equals("null"))?null:df.parse(item[5]);
-            Date to = (item[6].equals("null"))?null:df.parse(item[6]);
+//            DateFormat df = new SimpleDateFormat("yyyy-MM-dd kk:mm:ss z", Locale.ENGLISH);
+            Date from = (item[5].equals("null"))?null:dynamicChangeYear(item[5]);
+            Date to = (item[6].equals("null"))?null:dynamicChangeYear(item[6]);
             int isOnlyBasicsDrinks = Integer.parseInt(item[7]);
             return new Rule(groupId,scope,profitType,profit,canAdd,from,to,isOnlyBasicsDrinks,getRuleList(item[8]),getRuleList(item[9]),getRuleList(item[10]),bundle.getString("RULE_DES_"+item[11]));
-        }catch (ParseException e){
+        }catch (RuntimeException e){
             throw new RuntimeException(e.getMessage());
         }
+    }
+
+    private Date dynamicChangeYear(String time) {
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd kk:mm:ss z", Locale.ENGLISH);
+        Calendar calendar = Calendar.getInstance();
+        try {
+            Date current = new Date();
+            calendar.setTime(current);
+            int year = calendar.get(Calendar.YEAR);
+            Date when = df.parse(time);
+            calendar.setTime(when);
+            if(calendar.get(Calendar.YEAR)==1970) {
+                calendar.set(Calendar.YEAR,year);
+                when=calendar.getTime();
+                return when;
+            }
+        } catch (ParseException e) {
+            throw new RuntimeException(e.getMessage());
+        }
+        return null;
     }
 
     private List<Item> getRuleList(String str){

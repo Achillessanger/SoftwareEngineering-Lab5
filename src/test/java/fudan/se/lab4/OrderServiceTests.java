@@ -16,6 +16,7 @@ import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -51,6 +52,7 @@ public class OrderServiceTests {
     @Test
     public void testOrderNull() {
         thrown.expect(RuntimeException.class);
+        thrown.expectMessage(loggerService.log("ORDER_WRONG"));
         orderService.pay(null);
     }
 
@@ -66,6 +68,7 @@ public class OrderServiceTests {
     public void testOrderItemNull() {
         //test OrderItem null
         thrown.expect(RuntimeException.class);
+        thrown.expectMessage(loggerService.log("ORDER_WRONG"));
         orderService.pay(new Order("nullOrderItem", null));
     }
 
@@ -74,6 +77,7 @@ public class OrderServiceTests {
     public void testOderItemEmpty() {
         List<OrderItem> orderItems = new ArrayList<>();
         thrown.expect(RuntimeException.class);
+        thrown.expectMessage(loggerService.log("ORDER_WRONG"));
         paymentInfo = orderService.pay(new Order("0", orderItems));
     }
 
@@ -99,6 +103,7 @@ public class OrderServiceTests {
     public void testDrinkNameNull() {
         List<OrderItem> orderItems = new ArrayList<>();
         thrown.expect(RuntimeException.class);
+        thrown.expectMessage(MessageFormat.format(loggerService.log("ENTITY_NOT_FOUND"), "null"));
         orderItems.add(new OrderItem(null, new ArrayList<>(), 1));
         orderService.pay(new Order("nullDrinkName", orderItems));
     }
@@ -108,6 +113,7 @@ public class OrderServiceTests {
     public void testDrinkNameError() {
         List<OrderItem> orderItems = new ArrayList<>();
         thrown.expect(RuntimeException.class);
+        thrown.expectMessage(MessageFormat.format(loggerService.log("ENTITY_NOT_FOUND"), "error"));
         orderItems.add(new OrderItem("error", new ArrayList<>(), 1));
         orderService.pay(new Order("errorName", orderItems));
     }
@@ -164,6 +170,7 @@ public class OrderServiceTests {
     public void testOrderItemSizeSmall() {
         List<OrderItem> orderItems = new ArrayList<>();
         thrown.expect(RuntimeException.class);
+//        thrown.expectMessage(loggerService.log("INGREDIENT_INVALID"));
         orderItems.add(new OrderItem("espresso", new ArrayList<>(), Integer.MIN_VALUE));
         orderService.pay(new Order("smallSize", orderItems));
     }
@@ -227,6 +234,7 @@ public class OrderServiceTests {
     public void testOrderIngredientNull() {
         List<OrderItem> orderItems = new ArrayList<>();
         thrown.expect(RuntimeException.class);
+        thrown.expectMessage(loggerService.log("INGREDIENT_INVALID"));
         orderItems.add(new OrderItem("espresso", null, 1));
         orderService.pay(new Order("nullIngredient", orderItems));
     }
@@ -270,6 +278,7 @@ public class OrderServiceTests {
         List<OrderItem> orderItems = new ArrayList<>();
         List<Ingredient> ingredients = new ArrayList<>();
         thrown.expect(RuntimeException.class);
+        thrown.expectMessage(loggerService.log("INGREDIENT_INVALID"));
         ingredients.add(new Ingredient(null, 1));
         orderItems.add(new OrderItem("espresso", ingredients, 1));
         orderService.pay(new Order("nullIngredientName", orderItems));
@@ -281,6 +290,7 @@ public class OrderServiceTests {
         List<OrderItem> orderItems = new ArrayList<>();
         List<Ingredient> ingredients = new ArrayList<>();
         thrown.expect(RuntimeException.class);
+        thrown.expectMessage(loggerService.log("INGREDIENT_INVALID"));
         ingredients.add(new Ingredient("error", 1));
         orderItems.add(new OrderItem("espresso", ingredients, 1));
         orderService.pay(new Order("nullIngredientName", orderItems));
@@ -302,8 +312,8 @@ public class OrderServiceTests {
     public void testIngredientSizeSmall() {
         List<OrderItem> orderItems = new ArrayList<>();
         List<Ingredient> ingredients = new ArrayList<>();
-
         thrown.expect(RuntimeException.class);
+        thrown.expectMessage(loggerService.log("INGREDIENT_INVALID"));
         ingredients.add(new Ingredient("cream", -1));
         orderItems.add(new OrderItem("espresso", ingredients, 1));
         orderService.pay(new Order("1", orderItems));
